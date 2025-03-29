@@ -89,6 +89,10 @@ nav .fa{
         transition: 0.5s;
         border-radius: 40px;
     }
+    p{
+        color:darkred;
+        text-align:center;
+    }
     nav .fa{
         display: block;
         color: rgb(87, 13, 13);
