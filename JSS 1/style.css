@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    background: rgb(212, 208, 208);
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .container {
+    margin-top: 10px;
+    background: rgb(87, 13, 13);
+    
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 60%;
+    text-align: center;
+  }
+  @media(max-width: 414px){
+    .container{
+      width: 80%;
+    }
+  }
+  @media(max-width: 314px){
+    .container{
+      width: 100%;
+    }
+  }
+  .container img{
+    width: 150px;
+    margin: 2px;
+  }
+  .container h2{
+    color: rgb(0, 0, 43);
+  }
+  .container p{
+    color: gray;
+  }
+  input {
+
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 15px;
+  }
+  button {
+    padding: 10px;
+    margin-top: 10px;
+    color: white;
+    background: transparent;
+    transition: .7s;
+    border-radius: 20px;
+    font-size: 15px;
+  }
+  button:hover{
+    background: rgb(0, 0, 43);
+  }
+  
+
+
+
+
+  
+hr{
+  width: 80%;
+  border: 0;
+  border-bottom: 3px solid  rgb(0, 0, 43);
+  margin: 20px auto;
+  border-radius: 50px;
+}
+.coprright{
+  text-align: center;
+  font-size: 15px;
+  font-family: serif;
+}
+.coprright .fa{
+  color: rgb(87, 13, 13);
+}
+.flink{
+  text-align: center;
+  color: rgb(87, 13, 13);
+}
+.flink a{
+  color: rgb(87, 13, 13);
+}
