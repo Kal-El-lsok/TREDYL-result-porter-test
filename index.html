@@ -1,33 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>TREDYL INTERNATIONAL SCHOOL RESULTS PORTAL</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
-<body>
-  <div class="container">
-    <img src="logo-removebg-preview.png">
-    <h2>TREDYL SCHOOLS 3RD TERM RESULTS PORTAL</h2>
-    <h2>SSS 2</h2>
-    <input type="text" id="codeInput" placeholder="Enter Roll Number" />
-    <p>Example:12345678</p>
-    <button onclick="getPDF()">CHECK RESULTS</button>
-  </div>
+<!DOCTYPE html>	<!DOCTYPE html>
+<html>	<html lang="en">
+ <head>	<head>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">	  <meta charset="UTF-8" />
+     <title>TREDYL SCHOOLS RESULT PRINT-OUT SITE</title>	  <title>TREDYL INTERNATIONAL SCHOOL RESULTS PORTAL</title>
+     <link rel="stylesheet" href="style.css">	  <link rel="stylesheet" href="style.css" />
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">	  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+     <script src="https://kit.fontawesome.com/c4254e24a8.js"></script>	</head>
+ </head>	<body>
+ <body>	  <div class="container">
+    <section class="header">	    <img src="logo-removebg-preview.png">
+        <nav>	    <h2>TREDYL SCHOOLS 3RD TERM RESULTS PORTAL</h2>
+            <a href="index.html"><img src="logo-removebg-preview.png"></a>	    <h2>SSS 2</h2>
+            <div class="nav-links" id="navLinks">	    <input type="text" id="codeInput" placeholder="Enter Roll Number" />
+               <i class="fa fa-times"  onclick="hideMenu()"></i>	    <p>Example:12345678</p>
 
-  <footer>
-    <hr>
-    <div class="flink">
-        <li><a href="index.html">HOME</a></li>
-        <li><a href="print result.html">PRINT RESULT</a></li>
+    <button onclick="getPDF()">CHECK RESULTS</button>
+                <ul>	  </div>
+                    <li><a href="index.html">HOME</a></li>	
+                    <li><a href="print result.html">PRINT RESULT</a></li>	  <footer>
+                </ul>	    <hr>
+            </div>	    <div class="flink">
+            <i class="fa fa-bars" onclick="showMenu()"></i>	        <li><a href="index.html">HOME</a></li>
+        </nav>	        <li><a href="print result.html">PRINT RESULT</a></li>
+
         <li><a href="print news.html">View Newsletter</a></li>
+
         <li><a href="print result.html">VISIT ME</a></li>
-            
-        </div>
+        <div class="links">	
+            <h1>PRINT YOUR RESULT WITH EASE,</h1>	
+            <h2> IN JUST SOME SIMPLE STEPS.</h2>	
+            <h3>MOTTO: ANCHORED IN CHRIST FOR SERVICE.</h3>	
+        </div>	
+        <div class="plinks">	
+            <div class="row">	
+                <div class="plinks-col">	
+                    <div>	
+                        <h3>PRINT RESULT</h3>	
+                        <p>The TREDYL INTERNATIONAL SCHOOL MANAGEMENT decided to make it easy for student to "check" their "results" "ONLINE", All you need to do is click on the "Check Result", selet your "Class", and enter your "ROLL NUMBER and you are good to go.</p>	
+                        <a href="print result.html" class="hero-btn2">Check Result</a>       	
+                    </div>	
+                </div>	
+                <div class="plinks-col">	
+                    <div>	
+                        <h3>VIEW NEWSLETTER</h3>	
+                        <p> The TREDYL INTERNATIONAL SCHOOL MANAGEMENT decided to make it easy for student to View their Newsletter "ONLINE", All you need to do is click on the "View Newsletter", and you are good to go. You can choose to "download" it or "Print" it.</p>	
+                        <a href="print news.html" class="hero-btn2">View Newsletter</a>	
+                    </div>	
+                </div>	
+            </div>	
+
+        </div>	
+
+
+
+        <div class="plinkss">	
+            <div class="row">	
+                <div class="plinkss-col">	
+                    <div>	
+                        <h3>CREATOR</h3>	
+                        <p> This SITE was Created by the TREDYL INTERNATIONAL SCHOOLS MEDIA TEAM. Contact Us if you have any Challenge or Question. "VISIT US" to know us more.</p>	
+                        <a href="https://kal-el-lsok.github.io/KAL-EL-PORTFOLIO/" class="hero-btn2">Contact Us</a>	
+
+                    </div>	
+                </div>	
+            </div>	
+        </div>	        </div>
     <p class="coprright">Copyright &#169; 2025 Tredyl International School - All rights reserved. Made with  <i class="fa fa-heart"></i> by Kal-El</p>
 </footer>
 
+
+
   <script src="script.js"></script>
-</body>
+        <footer>	</body>
+            <hr>	
+            <div class="flink">	
+                <li><a href="index.html">HOME</a></li>	
+                <li><a href="print result.html">PRINT RESULT</a></li>	
+                <li><a href="print news.html">View Newsletter</a></li>	
+                <li><a href="https://kal-el-lsok.github.io/KAL-EL-PORTFOLIO/">VISIT US</a></li>	
+
+                </div>	
+            <p class="coprright">Copyright &#169; 2025 Tredyl International School - All rights reserved. Made with  <i class="fa fa-heart"></i> by NASARA JOHN</p>	
+        </footer>	
+</section>	
+
+
+
+
+ <!--------JavaScript for Toggle Menu------->	
+ <script>	
+    var navLinks = document.getElementById("navLinks");	
+    function showMenu(){	
+        navLinks.style.left = "0";	
+    }	
+    function hideMenu(){	
+        navLinks.style.left = "-200px";	
+    }	
+</script>	
+
+
+
+
+
+
+ </body>	
 </html>
