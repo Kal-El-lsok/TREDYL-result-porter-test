@@ -1,99 +1,250 @@
-<html>
- <head>
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>TREDYL SCHOOLS RESULT PRINT-OUT SITE</title>
-     <link rel="stylesheet" href="style.css">
-     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-     <script src="https://kit.fontawesome.com/c4254e24a8.js"></script>
- </head>
- <body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TREDYL SCHOOLS - RESULTS PORTAL</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
     <section class="header">
         <nav>
-            <a href="index.html"><img src="logo-removebg-preview.png"></a>
+            <a href="index.html" class="logo">
+                <img src="logo-removebg-preview.png" alt="TREDYL Schools Logo">
+            </a>
             <div class="nav-links" id="navLinks">
-               <i class="fa fa-times"  onclick="hideMenu()"></i>
-
+                <i class="fa fa-times" onclick="hideMenu()"></i>
                 <ul>
                     <li><a href="index.html">HOME</a></li>
                     <li><a href="print result.html">PRINT RESULT</a></li>
+                    <li><a href="print news.html">NEWSLETTER</a></li>
                 </ul>
             </div>
             <i class="fa fa-bars" onclick="showMenu()"></i>
         </nav>
 
-
-        <div class="links">
-            <h1>PRINT YOUR RESULT WITH EASE,</h1>
-            <h2> IN JUST SOME SIMPLE STEPS.</h2>
-            <h3>MOTTO: ANCHORED IN CHRIST FOR SERVICE.</h3>
-        </div>
-        <div class="plinks">
-            <div class="row">
-                <div class="plinks-col">
-                    <div>
-                        <h3>PRINT RESULT</h3>
-                        <p>The TREDYL INTERNATIONAL SCHOOL MANAGEMENT decided to make it easy for student to "check" their "results" "ONLINE", All you need to do is click on the "Check Result", selet your "Class", and enter your "ROLL NUMBER and you are good to go.</p>
-                        <a href="print result.html" class="hero-btn2">Check Result</a>       
-                    </div>
-                </div>
-                <div class="plinks-col">
-                    <div>
-                        <h3>VIEW NEWSLETTER</h3>
-                        <p> The TREDYL INTERNATIONAL SCHOOL MANAGEMENT decided to make it easy for student to View their Newsletter "ONLINE", All you need to do is click on the "View Newsletter", and you are good to go. You can choose to "download" it or "Print" it.</p>
-                        <a href="print news.html" class="hero-btn2">View Newsletter</a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-
-
-        <div class="plinkss">
-            <div class="row">
-                <div class="plinkss-col">
-                    <div>
-                        <h3>CREATOR</h3>
-                        <p> This SITE was Created by the TREDYL INTERNATIONAL SCHOOLS MEDIA TEAM. Contact Us if you have any Challenge or Question. "VISIT US" to know us more.</p>
-                        <a href="https://kal-el-lsok.github.io/KAL-EL-PORTFOLIO/" class="hero-btn2">Contact Us</a>
-
-                    </div>
-                </div>
+        <div class="portal-header">
+            <h1>TREDYL SCHOOLS RESULTS PORTAL</h1>
+            <h2>Access Your Academic Records Anytime, Anywhere</h2>
+            <div class="motto">
+                <i class="fas fa-anchor"></i>
+                <span>ANCHORED IN CHRIST FOR SERVICE</span>
             </div>
         </div>
 
+        <div class="portal-features">
+            <div class="features-grid">
+                <div class="feature-card result-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-print"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>PRINT RESULTS</h3>
+                        <p>Access and print your academic results online. Simply select your class, enter your roll number, and download or print your results instantly.</p>
+                        <div class="feature-steps">
+                            <div class="step">
+                                <span class="step-number">1</span>
+                                <span>Select Class</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">2</span>
+                                <span>Enter Roll Number</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">3</span>
+                                <span>View & Print</span>
+                            </div>
+                        </div>
+                        <a href="print result.html" class="portal-btn">
+                            <i class="fas fa-file-download"></i> CHECK RESULT
+                        </a>
+                    </div>
+                </div>
+
+                <div class="feature-card newsletter-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>SCHOOL NEWSLETTER</h3>
+                        <p>Stay updated with the latest school news, events, and announcements. View, download, or print the current and past newsletters online.</p>
+                        <div class="newsletter-info">
+                            <div class="info-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>Monthly Updates</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-bullhorn"></i>
+                                <span>Important Announcements</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-trophy"></i>
+                                <span>Achievements & Events</span>
+                            </div>
+                        </div>
+                        <a href="print news.html" class="portal-btn">
+                            <i class="fas fa-eye"></i> VIEW NEWSLETTER
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="portal-info">
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <div class="info-content">
+                    <h3>DIGITAL PORTAL</h3>
+                    <p>This results portal was developed by the TREDYL INTERNATIONAL SCHOOLS MEDIA TEAM to provide seamless online access to academic records and school information.</p>
+                    <div class="portal-features-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Secure & Private</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>24/7 Access</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Mobile Friendly</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Instant Updates</span>
+                        </div>
+                    </div>
+                    <a href="https://kal-el-lsok.github.io/KAL-EL-PORTFOLIO/" class="contact-btn">
+                        <i class="fas fa-headset"></i> CONTACT SUPPORT
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="important-notice">
+            <div class="notice-header">
+                <i class="fas fa-exclamation-circle"></i>
+                <h3>IMPORTANT INFORMATION</h3>
+            </div>
+            <div class="notice-content">
+                <div class="notice-item">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <h4>Result Release Schedule</h4>
+                        <p>Results are typically released within 2 weeks after examinations. Contact your class teacher for specific dates.</p>
+                    </div>
+                </div>
+                <div class="notice-item">
+                    <i class="fas fa-question-circle"></i>
+                    <div>
+                        <h4>Having Issues?</h4>
+                        <p>If you encounter any problems accessing your results, please contact the school administration or IT support.</p>
+                    </div>
+                </div>
+                <div class="notice-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <h4>Data Privacy</h4>
+                        <p>Your academic records are secure and protected. Only authorized personnel can access student information.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <footer>
-            <hr>
-            <div class="flink">
-                <li><a href="index.html">HOME</a></li>
-                <li><a href="print result.html">PRINT RESULT</a></li>
-                <li><a href="print news.html">View Newsletter</a></li>
-                <li><a href="https://kal-el-lsok.github.io/KAL-EL-PORTFOLIO/">VISIT US</a></li>
-
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="index.html" class="footer-link">
+                        <i class="fas fa-home"></i>
+                        <span>PORTAL HOME</span>
+                    </a>
+                    <a href="print result.html" class="footer-link">
+                        <i class="fas fa-print"></i>
+                        <span>PRINT RESULT</span>
+                    </a>
+                    <a href="print news.html" class="footer-link">
+                        <i class="fas fa-newspaper"></i>
+                        <span>NEWSLETTER</span>
+                    </a>
+                    <a href="https://kal-el-lsok.github.io/KAL-EL-PORTFOLIO/" class="footer-link">
+                        <i class="fas fa-code"></i>
+                        <span>DEVELOPER</span>
+                    </a>
                 </div>
-            <p class="coprright">Copyright &#169; 2025 Tredyl International School - All rights reserved. Made with  <i class="fa fa-heart"></i> by NASARA JOHN</p>
+                
+                <div class="footer-info">
+                    <div class="school-info">
+                        <img src="logo-removebg-preview.png" class="footer-logo" alt="TREDYL Logo">
+                        <p>TREDYL International Schools Results Portal<br>Secure Online Academic Records System</p>
+                    </div>
+                    
+                    <div class="contact-info">
+                        <h4>NEED HELP?</h4>
+                        <p><i class="fas fa-envelope"></i> support@tredylschools.edu.ng</p>
+                        <p><i class="fas fa-phone"></i> +234 802 379 1991</p>
+                        <p><i class="fas fa-clock"></i> Support Hours: 8AM - 4PM (Weekdays)</p>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p class="copyright">
+                        &copy; 2025 Tredyl International School - Results Portal. All rights reserved.
+                        <br>Developed with <i class="fas fa-heart"></i> by NASARA JOHN
+                    </p>
+                </div>
+            </div>
         </footer>
-</section>
+    </section>
 
+    <script>
+        // Mobile Menu Toggle
+        function showMenu() {
+            document.getElementById("navLinks").classList.add("active");
+        }
 
+        function hideMenu() {
+            document.getElementById("navLinks").classList.remove("active");
+        }
 
+        // Close mobile menu when clicking on links
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                hideMenu();
+            });
+        });
 
- <!--------JavaScript for Toggle Menu------->
- <script>
-    var navLinks = document.getElementById("navLinks");
-    function showMenu(){
-        navLinks.style.left = "0";
-    }
-    function hideMenu(){
-        navLinks.style.left = "-200px";
-    }
-</script>
+        // Animate feature cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, observerOptions);
 
+        // Observe feature cards
+        document.querySelectorAll('.feature-card, .info-card').forEach(card => {
+            observer.observe(card);
+        });
 
-
-
-
- </body>
+        // Button hover effects
+        document.querySelectorAll('.portal-btn, .contact-btn').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
 </html>
