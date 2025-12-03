@@ -1,59 +1,343 @@
 <!DOCTYPE html>
-<html>
- <head>
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>TREDYL SCHOOLS RESULT PRINT-OUT SITE</title>
-     <link rel="stylesheet" href="print result.css">
-     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-     <script src="https://kit.fontawesome.com/c4254e24a8.js"></script>
- </head>
- <body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TREDYL SCHOOLS - PRINT RESULTS</title>
+    <link rel="stylesheet" href="print result.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
     <section class="header">
         <nav>
-            <a href="index.html"><img src="logo-removebg-preview.png"></a>
+            <a href="index.html" class="logo">
+                <img src="logo-removebg-preview.png" alt="TREDYL Schools Logo">
+            </a>
             <div class="nav-links" id="navLinks">
-               <i class="fa fa-times"  onclick="hideMenu()"></i>
-
+                <i class="fa fa-times" onclick="hideMenu()"></i>
                 <ul>
-                    <li><a href="index.html">HOME</a></li>
-                    <li><a href="print result.html">PRINT RESULT</a></li>
+                    <li><a href="index.html">PORTAL HOME</a></li>
+                    <li><a href="print result.html" class="active">PRINT RESULT</a></li>
+                    <li><a href="print news.html">NEWSLETTER</a></li>
                 </ul>
             </div>
             <i class="fa fa-bars" onclick="showMenu()"></i>
         </nav>
 
+        <div class="result-portal">
+            <div class="portal-header">
+                <h1><i class="fas fa-print"></i> PRINT ACADEMIC RESULTS</h1>
+                <p class="portal-subtitle">Access and print your examination results for any term</p>
+            </div>
 
-        <section class="p">
-            <div class="print">
-                <h4>SELECT TERM</h4>
-               <a href="2nd term.html"class="btn">2ND TERM</a>
-               <a href="3rd term.html"class="btn">3RD TERM</a>
+            <div class="portal-content">
+                <div class="selection-section">
+                    <div class="selection-header">
+                        <i class="fas fa-file-alt"></i>
+                        <h2>SELECT ACADEMIC TERM</h2>
+                        <p>Choose the term for which you want to view and print results</p>
+                    </div>
+
+                    <div class="term-cards">
+                        <div class="term-card">
+                            <div class="term-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="term-content">
+                                <h3>FIRST TERM</h3>
+                                <p class="term-period">September - December</p>
+                                <p class="term-description">First term examination results covering the beginning of the academic session.</p>
+                                <div class="term-status">
+                                    <span class="status-badge available">
+                                        <i class="fas fa-check-circle"></i> AVAILABLE
+                                    </span>
+                                </div>
+                                <a href="1st term.html" class="term-btn">
+                                    <i class="fas fa-search"></i> VIEW RESULTS
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="term-card highlight">
+                            <div class="term-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="term-content">
+                                <h3>SECOND TERM</h3>
+                                <p class="term-period">January - March</p>
+                                <p class="term-description">Mid-session examination results and continuous assessments.</p>
+                                <div class="term-status">
+                                    <span class="status-badge available">
+                                        <i class="fas fa-check-circle"></i> AVAILABLE
+                                    </span>
+                                </div>
+                                <a href="2nd term.html" class="term-btn primary">
+                                    <i class="fas fa-print"></i> PRINT RESULTS
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="term-card">
+                            <div class="term-icon">
+                                <i class="fas fa-calendar-star"></i>
+                            </div>
+                            <div class="term-content">
+                                <h3>THIRD TERM</h3>
+                                <p class="term-period">April - July</p>
+                                <p class="term-description">End of session examination results and promotion lists.</p>
+                                <div class="term-status">
+                                    <span class="status-badge available">
+                                        <i class="fas fa-check-circle"></i> AVAILABLE
+                                    </span>
+                                </div>
+                                <a href="3rd term.html" class="term-btn">
+                                    <i class="fas fa-search"></i> VIEW RESULTS
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-access">
+                    <div class="access-card">
+                        <div class="access-header">
+                            <i class="fas fa-bolt"></i>
+                            <h3>QUICK RESULT LOOKUP</h3>
+                        </div>
+                        <form class="lookup-form">
+                            <div class="form-group">
+                                <label for="classSelect">
+                                    <i class="fas fa-graduation-cap"></i> SELECT CLASS
+                                </label>
+                                <select id="classSelect" required>
+                                    <option value="">Choose your class...</option>
+                                    <option value="nursery">Nursery Section</option>
+                                    <option value="primary1">Primary 1</option>
+                                    <option value="primary2">Primary 2</option>
+                                    <option value="primary3">Primary 3</option>
+                                    <option value="primary4">Primary 4</option>
+                                    <option value="primary5">Primary 5</option>
+                                    <option value="primary6">Primary 6</option>
+                                    <option value="jss1">JSS 1</option>
+                                    <option value="jss2">JSS 2</option>
+                                    <option value="jss3">JSS 3</option>
+                                    <option value="sss1">SSS 1</option>
+                                    <option value="sss2">SSS 2</option>
+                                    <option value="sss3">SSS 3</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="rollNumber">
+                                    <i class="fas fa-id-card"></i> ROLL NUMBER
+                                </label>
+                                <input type="text" id="rollNumber" placeholder="Enter your roll number" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="termSelect">
+                                    <i class="fas fa-calendar"></i> SELECT TERM
+                                </label>
+                                <select id="termSelect" required>
+                                    <option value="">Select term...</option>
+                                    <option value="1st">First Term</option>
+                                    <option value="2nd">Second Term</option>
+                                    <option value="3rd">Third Term</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="session">
+                                    <i class="fas fa-calendar-day"></i> ACADEMIC SESSION
+                                </label>
+                                <select id="session" required>
+                                    <option value="">Select session...</option>
+                                    <option value="2024-2025">2024/2025</option>
+                                    <option value="2023-2024">2023/2024</option>
+                                    <option value="2022-2023">2022/2023</option>
+                                    <option value="2021-2022">2021/2022</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="lookup-btn">
+                                <i class="fas fa-search"></i> CHECK RESULT
+                            </button>
+                        </form>
+
+                        <div class="access-help">
+                            <i class="fas fa-info-circle"></i>
+                            <p>Need help? Contact your class teacher for roll number assistance.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-instructions">
+                    <div class="instructions-card">
+                        <h3><i class="fas fa-list-check"></i> HOW TO PRINT YOUR RESULT</h3>
+                        <div class="instructions-steps">
+                            <div class="instruction-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Select Term</h4>
+                                    <p>Choose the academic term from the options above</p>
+                                </div>
+                            </div>
+                            <div class="instruction-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Enter Details</h4>
+                                    <p>Fill in your class, roll number, and session information</p>
+                                </div>
+                            </div>
+                            <div class="instruction-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>View Results</h4>
+                                    <p>Your results will be displayed on the screen</p>
+                                </div>
+                            </div>
+                            <div class="instruction-step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Print or Download</h4>
+                                    <p>Use the print button to get a hard copy or download as PDF</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        </section>
-
         <footer>
-            <hr>
-            <div class="flink">
-            <li><a href="index.html">HOME</a></li>
-            <li><a href="print result.html">PRINT RESULT</a></li>
-            <li><a href="print news.html">View Newsletter</a></li>
-            <li><a href="print result.html">VISIT ME</a></li>
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="index.html" class="footer-link">
+                        <i class="fas fa-home"></i>
+                        <span>PORTAL HOME</span>
+                    </a>
+                    <a href="print result.html" class="footer-link active">
+                        <i class="fas fa-print"></i>
+                        <span>PRINT RESULT</span>
+                    </a>
+                    <a href="print news.html" class="footer-link">
+                        <i class="fas fa-newspaper"></i>
+                        <span>NEWSLETTER</span>
+                    </a>
+                    <a href="https://kal-el-lsok.github.io/KAL-EL-PORTFOLIO/" class="footer-link">
+                        <i class="fas fa-code"></i>
+                        <span>DEVELOPER</span>
+                    </a>
+                </div>
+
+                <div class="footer-info">
+                    <div class="school-info">
+                        <img src="logo-removebg-preview.png" class="footer-logo" alt="TREDYL Logo">
+                        <p>TREDYL International Schools Results Portal<br>Academic Records Management System</p>
+                    </div>
+
+                    <div class="support-info">
+                        <h4><i class="fas fa-headset"></i> RESULT SUPPORT</h4>
+                        <p>For result-related inquiries, contact:</p>
+                        <p><i class="fas fa-envelope"></i> results@tredylschools.edu.ng</p>
+                        <p><i class="fas fa-phone"></i> +234 802 833 2430</p>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p class="copyright">
+                        &copy; 2025 Tredyl International School - Results Portal. All rights reserved.
+                        <br>Developed with <i class="fas fa-heart"></i> by KAL-EL
+                    </p>
+                </div>
             </div>
-            <p class="coprright">Copyright &#169; 2025 Tredyl International School - All rights reserved. Made with  <i class="fa fa-heart"></i> by Kal-El</p>
         </footer>
-</section>
+    </section>
 
+    <script>
+        // Mobile Menu Toggle
+        function showMenu() {
+            document.getElementById("navLinks").classList.add("active");
+        }
 
+        function hideMenu() {
+            document.getElementById("navLinks").classList.remove("active");
+        }
 
+        // Close mobile menu when clicking on links
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                hideMenu();
+            });
+        });
 
- <!--------JavaScript for Toggle Menu------->
- <script>
-    var navLinks = document.getElementById("navLinks");
-    function showMenu(){
-        navLinks.style.left = "0";
-    }
-    function hideMenu(){
-        navLinks.style.left = "-200px";
-    }
-</script>
+        // Form submission
+        document.querySelector('.lookup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const classSelect = document.getElementById('classSelect').value;
+            const rollNumber = document.getElementById('rollNumber').value;
+            const termSelect = document.getElementById('termSelect').value;
+            const session = document.getElementById('session').value;
+            
+            if (!classSelect || !rollNumber || !termSelect || !session) {
+                alert('Please fill in all fields to check your result.');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = this.querySelector('.lookup-btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> LOADING...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Based on the term selected, redirect to appropriate page
+                if (termSelect === '1st') {
+                    window.location.href = '1st term.html';
+                } else if (termSelect === '2nd') {
+                    window.location.href = '2nd term.html';
+                } else if (termSelect === '3rd') {
+                    window.location.href = '3rd term.html';
+                }
+                
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 1500);
+        });
+
+        // Term card hover effects
+        document.querySelectorAll('.term-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Form input focus effects
+        document.querySelectorAll('select, input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('focused');
+            });
+        });
+
+        // Auto-scroll to term cards on page load if on mobile
+        if (window.innerWidth < 768) {
+            window.addEventListener('load', () => {
+                document.querySelector('.term-cards').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        }
+    </script>
+</body>
+</html>
