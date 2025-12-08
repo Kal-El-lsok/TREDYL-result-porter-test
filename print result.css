@@ -14,6 +14,7 @@
     --success-green: #10b981;
     --success-green-light: #34d399;
     --warning-orange: #f59e0b;
+    --pending-yellow: #fbbf24;
     --text-dark: #1e293b;
     --text-gray: #64748b;
     --border-radius: 12px;
@@ -263,6 +264,11 @@ nav .fa {
 .status-badge.available {
     background: #d1fae5;
     color: #065f46;
+}
+
+.status-badge.pending {
+    background: #fef3c7;
+    color: #92400e;
 }
 
 .status-badge i {
