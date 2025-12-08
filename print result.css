@@ -13,8 +13,9 @@
     --accent-blue-dark: #1d4ed8;
     --success-green: #10b981;
     --success-green-light: #34d399;
+    --pending-blue: #3b82f6;
+    --pending-blue-light: #93c5fd;
     --warning-orange: #f59e0b;
-    --pending-yellow: #fbbf24;
     --text-dark: #1e293b;
     --text-gray: #64748b;
     --border-radius: 12px;
@@ -188,23 +189,44 @@ nav .fa {
     box-shadow: var(--shadow-medium);
 }
 
-.term-card.highlight {
-    border: 3px solid var(--success-green);
-    transform: scale(1.02);
+/* Blue Term Card (First Term) */
+.term-card.blue-term {
+    border: 3px solid var(--pending-blue);
 }
 
-.term-card.highlight:hover {
+.term-card.blue-term .term-icon {
+    background: linear-gradient(135deg, var(--pending-blue), var(--accent-blue-dark));
+}
+
+.term-card.blue-term .term-content h3 {
+    color: var(--pending-blue);
+}
+
+/* Green Term Cards (Second & Third Terms) */
+.term-card.green-term {
+    border: 3px solid var(--success-green);
+}
+
+.term-card.green-term .term-icon {
+    background: linear-gradient(135deg, var(--success-green), #059669);
+}
+
+.term-card.green-term .term-content h3 {
+    color: #059669;
+}
+
+.term-card.green-term.highlight {
+    transform: scale(1.02);
+    border-width: 4px;
+}
+
+.term-card.green-term.highlight:hover {
     transform: scale(1.02) translateY(-5px);
 }
 
 .term-icon {
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
     padding: 2rem;
     text-align: center;
-}
-
-.term-card.highlight .term-icon {
-    background: linear-gradient(135deg, var(--success-green), #059669);
 }
 
 .term-icon i {
@@ -217,19 +239,14 @@ nav .fa {
 }
 
 .term-content h3 {
-    color: var(--accent-blue-dark);
     margin-bottom: 0.5rem;
     font-size: 1.5rem;
 }
 
-.term-card.highlight .term-content h3 {
-    color: #059669;
-}
-
 .term-period {
-    color: var(--accent-blue);
+    color: var(--text-gray);
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     font-size: 0.9rem;
     display: flex;
     align-items: center;
@@ -238,6 +255,30 @@ nav .fa {
 
 .term-period::before {
     content: '📅';
+}
+
+.availability-date {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: var(--secondary-light);
+    border-radius: var(--border-radius);
+    font-size: 0.85rem;
+}
+
+.availability-date i {
+    color: var(--accent-blue);
+}
+
+.term-card.green-term .availability-date i {
+    color: var(--success-green);
+}
+
+.availability-date span {
+    color: var(--text-dark);
+    font-weight: 500;
 }
 
 .term-description {
@@ -267,8 +308,8 @@ nav .fa {
 }
 
 .status-badge.pending {
-    background: #fef3c7;
-    color: #92400e;
+    background: #dbeafe;
+    color: #1e40af;
 }
 
 .status-badge i {
@@ -289,11 +330,32 @@ nav .fa {
     font-weight: 600;
     transition: all 0.3s ease;
     border: 2px solid var(--accent-blue);
+    cursor: pointer;
 }
 
 .term-btn:hover {
     background: white;
     color: var(--accent-blue);
+}
+
+.term-btn.check-btn {
+    background: var(--success-green);
+    border-color: var(--success-green);
+}
+
+.term-btn.check-btn:hover {
+    background: white;
+    color: var(--success-green);
+}
+
+.term-btn.pending-btn {
+    background: var(--pending-blue);
+    border-color: var(--pending-blue);
+}
+
+.term-btn.pending-btn:hover {
+    background: white;
+    color: var(--pending-blue);
 }
 
 .term-btn.primary {
@@ -306,143 +368,52 @@ nav .fa {
     color: var(--success-green);
 }
 
-/* Quick Access Section */
-.quick-access {
+/* Help Notice (Replaced Quick Access) */
+.help-notice {
     margin-bottom: 3rem;
 }
 
-.access-card {
-    background: white;
-    border-radius: var(--border-radius);
-    padding: 2.5rem;
-    box-shadow: var(--shadow-medium);
-}
-
-.access-header {
+.notice-content {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid var(--secondary-light);
-}
-
-.access-header i {
-    font-size: 2rem;
-    color: var(--accent-blue);
-}
-
-.access-header h3 {
-    color: var(--text-dark);
-    font-size: 1.5rem;
-}
-
-/* Lookup Form */
-.lookup-form {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    align-items: flex-start;
     gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--text-dark);
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
-}
-
-.form-group label i {
-    color: var(--accent-blue);
-}
-
-.form-group select,
-.form-group input {
-    padding: 0.8rem 1rem;
-    border: 2px solid var(--secondary-light);
-    border-radius: var(--border-radius);
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background: white;
-    color: var(--text-dark);
-}
-
-.form-group select:focus,
-.form-group input:focus {
-    outline: none;
-    border-color: var(--accent-blue);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.form-group.focused label {
-    color: var(--accent-blue);
-}
-
-.lookup-btn {
-    grid-column: 1 / -1;
-    padding: 1rem;
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-dark));
-    color: white;
-    border: none;
-    border-radius: var(--border-radius);
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
-}
-
-.lookup-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-medium);
-}
-
-.lookup-btn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.lookup-btn i.fa-spinner {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.access-help {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
+    padding: 2rem;
     background: #fef3c7;
     border-radius: var(--border-radius);
     border-left: 4px solid var(--warning-orange);
 }
 
-.access-help i {
+.notice-content i {
+    font-size: 2.5rem;
     color: var(--warning-orange);
-    font-size: 1.5rem;
+    margin-top: 0.5rem;
 }
 
-.access-help p {
+.notice-content h3 {
     color: #92400e;
-    font-size: 0.9rem;
-    line-height: 1.5;
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+.notice-content p {
+    color: #92400e;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.contact-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(146, 64, 14, 0.2);
+}
+
+.contact-info i {
+    font-size: 1rem;
+    margin: 0;
 }
 
 /* Result Instructions */
@@ -506,6 +477,133 @@ nav .fa {
     color: var(--text-gray);
     font-size: 0.9rem;
     line-height: 1.5;
+}
+
+/* Pending Results Popup */
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.popup-content {
+    background: white;
+    border-radius: var(--border-radius);
+    width: 100%;
+    max-width: 500px;
+    box-shadow: var(--shadow-large);
+    animation: popupIn 0.3s ease;
+}
+
+@keyframes popupIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.popup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+    background: linear-gradient(135deg, var(--pending-blue), var(--accent-blue-dark));
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    color: white;
+}
+
+.popup-header i {
+    font-size: 2rem;
+}
+
+.popup-header h2 {
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+.popup-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+}
+
+.popup-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.popup-body {
+    padding: 2rem;
+}
+
+.popup-body p {
+    color: var(--text-gray);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.availability-notice {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #dbeafe;
+    border-radius: var(--border-radius);
+    border: 2px dashed var(--pending-blue);
+}
+
+.availability-notice i {
+    font-size: 2.5rem;
+    color: var(--pending-blue);
+    margin-bottom: 1rem;
+}
+
+.availability-notice h3 {
+    color: var(--pending-blue);
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.popup-actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.popup-btn {
+    padding: 0.8rem 2rem;
+    background: var(--pending-blue);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.popup-btn:hover {
+    background: var(--accent-blue-dark);
+    transform: translateY(-2px);
 }
 
 /* Footer */
@@ -676,16 +774,21 @@ footer {
         grid-template-columns: 1fr;
     }
     
-    .term-card.highlight {
+    .term-card.green-term.highlight {
         transform: scale(1);
     }
     
-    .term-card.highlight:hover {
+    .term-card.green-term.highlight:hover {
         transform: scale(1) translateY(-5px);
     }
     
-    .lookup-form {
-        grid-template-columns: 1fr;
+    .notice-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .contact-info {
+        justify-content: center;
     }
     
     .instructions-steps {
@@ -713,8 +816,23 @@ footer {
         font-size: 1rem;
     }
     
-    .access-card,
     .instructions-card {
+        padding: 1.5rem;
+    }
+    
+    .popup-content {
+        margin: 1rem;
+    }
+    
+    .popup-header {
+        padding: 1rem 1.5rem;
+    }
+    
+    .popup-header h2 {
+        font-size: 1.1rem;
+    }
+    
+    .popup-body {
         padding: 1.5rem;
     }
     
