@@ -5,30 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pre-Nursery Admin - TREDYL SCHOOLS</title>
     
-    <!-- FIREBASE v12 -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyBbswCKXHCr_d_CKY3Ad2WQyflvg7bJV94",
-            authDomain: "tredyl-schools.firebaseapp.com",
-            databaseURL: "https://tredyl-schools-default-rtdb.firebaseio.com",
-            projectId: "tredyl-schools",
-            storageBucket: "tredyl-schools.firebasestorage.app",
-            messagingSenderId: "810112149886",
-            appId: "1:810112149886:web:0f915a9c6e7f2cc1cdab2f"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-        
-        window.firebaseDatabase = database;
-        window.firebaseRef = ref;
-        window.firebaseSet = set;
-        window.firebaseGet = get;
-        console.log("✅ Admin: Firebase ready");
-    </script>
+    <!-- FIREBASE SDK v9 (NOT v12) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
@@ -63,6 +42,29 @@
         .search-input { width: 100%; padding: 12px 15px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; }
         .roll-display { font-family: 'Courier New', monospace; font-weight: bold; color: #1e293b; }
     </style>
+    
+    <script>
+        // FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbswCKXHCr_d_CKY3Ad2WQyflvg7bJV94",
+            authDomain: "tredyl-schools.firebaseapp.com",
+            databaseURL: "https://tredyl-schools-default-rtdb.firebaseio.com",
+            projectId: "tredyl-schools",
+            storageBucket: "tredyl-schools.firebasestorage.app",
+            messagingSenderId: "810112149886",
+            appId: "1:810112149886:web:0f915a9c6e7f2cc1cdab2f"
+        };
+        
+        // Initialize Firebase
+        let database;
+        try {
+            const app = firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            console.log("✅ Admin: Firebase ready");
+        } catch (error) {
+            console.error("Admin Firebase error:", error);
+        }
+    </script>
 </head>
 <body>
     <div class="admin-container">
@@ -116,6 +118,7 @@
 
         // CHECK PASSWORD
         function checkPassword() {
+            console.log("Login clicked");
             const password = document.getElementById('adminPassword').value;
             if (password === 'KALELTHELASTSONOFKRYPTON') {
                 document.getElementById('passwordScreen').style.display = 'none';
@@ -128,30 +131,43 @@
 
         // LOAD FROM FIREBASE
         async function loadStudentsFromFirebase() {
+            console.log("Loading from Firebase...");
             try {
-                const snapshot = await window.firebaseGet(window.firebaseRef(window.firebaseDatabase, 'students/preNursery'));
+                if (!database) {
+                    console.error("No database connection");
+                    displayStudents();
+                    return;
+                }
+                
+                const snapshot = await database.ref('students/preNursery').once('value');
                 if (snapshot.exists()) {
                     students = snapshot.val();
+                    console.log("Loaded from Firebase:", students);
                 }
                 displayStudents();
             } catch (error) {
-                console.log("Using local data:", error);
+                console.log("Firebase error, using local:", error);
                 displayStudents();
             }
         }
 
         // SAVE TO FIREBASE
         async function saveToFirebase() {
+            console.log("Saving to Firebase...");
             try {
-                await window.firebaseSet(window.firebaseRef(window.firebaseDatabase, 'students/preNursery'), students);
+                await database.ref('students/preNursery').set(students);
                 console.log("✅ Saved to Firebase");
+                return true;
             } catch (error) {
                 console.log("Save error:", error);
+                alert("Save failed: " + error.message);
+                return false;
             }
         }
 
         // DISPLAY STUDENTS
         function displayStudents() {
+            console.log("Displaying students");
             const grid = document.getElementById('studentsGrid');
             grid.innerHTML = '';
             
@@ -160,8 +176,9 @@
             students.forEach(student => {
                 if (student.access) granted++; else denied++;
                 
-                grid.innerHTML += `
-                <div class="student-card ${student.access ? 'granted' : 'denied'}">
+                const card = document.createElement('div');
+                card.className = `student-card ${student.access ? 'granted' : 'denied'}`;
+                card.innerHTML = `
                     <div class="student-name">${student.fullName}</div>
                     <div class="student-details">
                         <div><strong>Roll:</strong> <span class="roll-display">${student.rollNumber}</span></div>
@@ -176,7 +193,8 @@
                             `<button class="action-btn grant-btn" onclick="grantAccess(${student.id})">Grant Access</button>` : 
                             `<button class="action-btn revoke-btn" onclick="revokeAccess(${student.id})">Revoke Access</button>`}
                     </div>
-                </div>`;
+                `;
+                grid.appendChild(card);
             });
             
             document.getElementById('totalStudents').textContent = students.length;
@@ -186,25 +204,33 @@
 
         // GRANT ACCESS
         async function grantAccess(studentId) {
+            console.log("Granting access to:", studentId);
             const student = students.find(s => s.id === studentId);
             if (student) {
                 student.access = true;
                 student.feesPaid = true;
-                await saveToFirebase();
-                displayStudents();
-                alert(`✅ Access granted to ${student.fullName}`);
+                
+                const saved = await saveToFirebase();
+                if (saved) {
+                    displayStudents();
+                    alert(`✅ Access GRANTED to ${student.fullName}`);
+                }
             }
         }
 
         // REVOKE ACCESS
         async function revokeAccess(studentId) {
+            console.log("Revoking access from:", studentId);
             const student = students.find(s => s.id === studentId);
             if (student) {
                 student.access = false;
                 student.feesPaid = false;
-                await saveToFirebase();
-                displayStudents();
-                alert(`⚠️ Access revoked from ${student.fullName}`);
+                
+                const saved = await saveToFirebase();
+                if (saved) {
+                    displayStudents();
+                    alert(`⚠️ Access REVOKED from ${student.fullName}`);
+                }
             }
         }
 
@@ -244,8 +270,11 @@
         }
 
         // INIT
-        document.getElementById('adminPassword').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') checkPassword();
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Admin page loaded");
+            document.getElementById('adminPassword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkPassword();
+            });
         });
     </script>
 </body>
