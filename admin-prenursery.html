@@ -5,12 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pre-Nursery Admin - TREDYL SCHOOLS</title>
     
-    <!-- FIREBASE -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+    <!-- FIREBASE v12 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbswCKXHCr_d_CKY3Ad2WQyflvg7bJV94",
+            authDomain: "tredyl-schools.firebaseapp.com",
+            databaseURL: "https://tredyl-schools-default-rtdb.firebaseio.com",
+            projectId: "tredyl-schools",
+            storageBucket: "tredyl-schools.firebasestorage.app",
+            messagingSenderId: "810112149886",
+            appId: "1:810112149886:web:0f915a9c6e7f2cc1cdab2f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        
+        window.firebaseDatabase = database;
+        window.firebaseRef = ref;
+        window.firebaseSet = set;
+        window.firebaseGet = get;
+        console.log("✅ Admin: Firebase ready");
+    </script>
     
     <style>
-        /* KEEP YOUR EXISTING STYLES - DON'T CHANGE */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: #0f172a; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .admin-container { background: white; border-radius: 15px; width: 100%; max-width: 900px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
@@ -42,39 +62,6 @@
         .search-box { margin-bottom: 20px; }
         .search-input { width: 100%; padding: 12px 15px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; }
         .roll-display { font-family: 'Courier New', monospace; font-weight: bold; color: #1e293b; }
-        
-        /* ADD THESE NEW STYLES */
-        .status-indicator {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-        .status-online {
-            background: #10b981;
-            color: white;
-        }
-        .status-offline {
-            background: #ef4444;
-            color: white;
-        }
-        .mode-indicator {
-            padding: 8px 15px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        .mode-cloud {
-            background: #dbeafe;
-            color: #1e40af;
-            border-left: 4px solid #3b82f6;
-        }
-        .mode-local {
-            background: #fef3c7;
-            color: #92400e;
-            border-left: 4px solid #f59e0b;
-        }
     </style>
 </head>
 <body>
@@ -84,464 +71,182 @@
             <p>Student Result Access Management</p>
         </div>
         
-        <!-- Password Screen -->
         <div class="admin-content" id="passwordScreen">
             <div class="password-screen">
                 <h2>ADMIN AUTHENTICATION</h2>
                 <p>Enter admin password to continue</p>
-                
-                <input type="password" id="adminPassword" class="password-input" 
-                       placeholder="Enter admin password" autofocus>
-                
-                <button class="password-btn" id="loginButton">
-                    ACCESS ADMIN PORTAL
-                </button>
-                
-                <div class="password-error" id="passwordError">
-                    Incorrect password
-                </div>
+                <input type="password" id="adminPassword" class="password-input" placeholder="Enter admin password" autofocus>
+                <button class="password-btn" onclick="checkPassword()">ACCESS ADMIN PORTAL</button>
+                <div class="password-error" id="passwordError">Incorrect password</div>
             </div>
         </div>
         
-        <!-- Management Section -->
         <div class="admin-content management-section" id="managementSection">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h2>PRE-NURSERY STUDENTS 
-                    <span id="connectionStatus" class="status-indicator status-offline">OFFLINE</span>
-                </h2>
-                <button class="logout-btn" id="logoutButton">
-                    Logout
-                </button>
+                <h2>PRE-NURSERY STUDENTS</h2>
+                <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
             
-            <!-- Mode Indicator -->
-            <div id="modeIndicator" class="mode-indicator mode-local">
-                <i class="fas fa-exclamation-triangle"></i> LOCAL MODE: Changes won't sync with phones
-            </div>
-            
-            <!-- Statistics -->
             <div class="stats-box">
-                <div class="stat-item">
-                    <div class="stat-number" id="totalStudents">0</div>
-                    <div class="stat-label">Total Students</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="accessGranted">0</div>
-                    <div class="stat-label">Access Granted</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="accessDenied">0</div>
-                    <div class="stat-label">Access Denied</div>
-                </div>
+                <div class="stat-item"><div class="stat-number" id="totalStudents">6</div><div class="stat-label">Total Students</div></div>
+                <div class="stat-item"><div class="stat-number" id="accessGranted">0</div><div class="stat-label">Access Granted</div></div>
+                <div class="stat-item"><div class="stat-number" id="accessDenied">6</div><div class="stat-label">Access Denied</div></div>
             </div>
             
-            <!-- Search -->
             <div class="search-box">
-                <input type="text" id="searchInput" class="search-input" 
-                       placeholder="Search students by name or roll number...">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search students..." onkeyup="searchStudents()">
             </div>
             
-            <!-- Students Grid -->
             <div class="students-grid" id="studentsGrid">
-                <div style="text-align: center; padding: 40px; color: #64748b;">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 15px;"></i>
-                    <p>Loading students...</p>
-                </div>
-            </div>
-            
-            <!-- Instructions -->
-            <div style="margin-top: 30px; padding: 15px; background: #fef3c7; border-radius: 8px; color: #92400e;">
-                <h4>ADMIN INSTRUCTIONS:</h4>
-                <p>1. Click GRANT ACCESS when student completes school fees</p>
-                <p>2. Click REVOKE ACCESS to remove access if needed</p>
-                <p>3. <strong id="syncStatus">LOCAL MODE:</strong> Changes won't sync with student phones</p>
-                <p>4. To enable phone sync, check Firebase configuration</p>
-            </div>
-            
-            <!-- Firebase Help -->
-            <div id="firebaseHelp" style="margin-top: 20px; padding: 15px; background: #dbeafe; border-radius: 8px; color: #1e40af; display: none;">
-                <h4><i class="fas fa-cloud"></i> FIREBASE SETUP NEEDED</h4>
-                <p>To sync with student phones:</p>
-                <ol>
-                    <li>Get Firebase config from <a href="https://console.firebase.google.com" target="_blank">Firebase Console</a></li>
-                    <li>Replace the firebaseConfig object in this file (lines 180-187)</li>
-                    <li>Refresh this page</li>
-                </ol>
+                <!-- Students loaded here -->
             </div>
         </div>
     </div>
 
     <script>
-        // ============================================
-        // 1. FIREBASE CONFIGURATION
-        // ============================================
-        // ⚠️ REPLACE WITH YOUR ACTUAL FIREBASE CONFIG ⚠️
-        const firebaseConfig = {
-            apiKey: "AIzaSyBbswCKXHCr_d_CKY3Ad2WQyflvg7bJV94", // ← MUST REPLACE WITH YOURS
-            authDomain: "tredyl-schools.firebaseapp.com",
-            databaseURL: "https://tredyl-schools-default-rtdb.firebaseio.com",
-            projectId: "tredyl-schools",
-            storageBucket: "tredyl-schools.firebasestorage.app",
-            messagingSenderId: "810112149886,
-            appId: "1:810112149886:web:0f915a9c6e7f2cc1cdab2f"
-        };
+        // STUDENT DATA
+        let students = [
+            { id: 1, fullName: "Jacinta John", rollNumber: "20203425", access: false, pdfName: "20203425.pdf", class: "Pre-Nursery", feesPaid: false },
+            { id: 2, fullName: "Gabriella Uba", rollNumber: "20933225", access: false, pdfName: "20933225.pdf", class: "Pre-Nursery", feesPaid: false },
+            { id: 3, fullName: "Williams Julius", rollNumber: "20458325", access: false, pdfName: "20458325.pdf", class: "Pre-Nursery", feesPaid: false },
+            { id: 4, fullName: "Nanpyal Luke", rollNumber: "20148325", access: false, pdfName: "20148325.pdf", class: "Pre-Nursery", feesPaid: false },
+            { id: 5, fullName: "King David Francis", rollNumber: "20670425", access: false, pdfName: "20670425.pdf", class: "Pre-Nursery", feesPaid: false },
+            { id: 6, fullName: "Enoch Louis", rollNumber: "20182925", access: false, pdfName: "20182925.pdf", class: "Pre-Nursery", feesPaid: false }
+        ];
 
-        // ============================================
-        // 2. GLOBAL VARIABLES
-        // ============================================
-        let database = null;
-        let students = [];
-        let isFirebaseConnected = false;
-        let usingExampleConfig = true;
-
-        // ============================================
-        // 3. INITIALIZE FIREBASE
-        // ============================================
-        function initializeFirebase() {
-            console.log("🔧 Initializing Firebase...");
-            
-            // Check if config is example or real
-            usingExampleConfig = firebaseConfig.apiKey.includes("EXAMPLE");
-            
-            if (usingExampleConfig) {
-                console.log("⚠️ Using EXAMPLE Firebase config - Will use LOCAL mode");
-                updateStatus("LOCAL MODE", false);
-                document.getElementById('firebaseHelp').style.display = 'block';
-                return false;
-            }
-            
-            try {
-                // Check if Firebase scripts loaded
-                if (typeof firebase === 'undefined') {
-                    console.error("❌ Firebase scripts not loaded");
-                    updateStatus("FIREBASE ERROR", false);
-                    return false;
-                }
-                
-                // Initialize Firebase
-                firebase.initializeApp(firebaseConfig);
-                database = firebase.database();
-                
-                // Test connection
-                database.ref('.info/connected').on('value', (snap) => {
-                    isFirebaseConnected = snap.val() === true;
-                    updateStatus(isFirebaseConnected ? "CONNECTED" : "OFFLINE", isFirebaseConnected);
-                });
-                
-                console.log("✅ Firebase initialized");
-                return true;
-                
-            } catch (error) {
-                console.error("❌ Firebase initialization failed:", error);
-                updateStatus("FIREBASE ERROR", false);
-                return false;
+        // CHECK PASSWORD
+        function checkPassword() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === 'KALELTHELASTSONOFKRYPTON') {
+                document.getElementById('passwordScreen').style.display = 'none';
+                document.getElementById('managementSection').style.display = 'block';
+                loadStudentsFromFirebase();
+            } else {
+                document.getElementById('passwordError').style.display = 'block';
             }
         }
 
-        // ============================================
-        // 4. LOAD STUDENTS (WITH FALLBACK)
-        // ============================================
-        async function loadStudents() {
-            console.log("📥 Loading students...");
-            
-            // Default student data
-            const defaultStudents = [
-                { id: 1, firstName: "Jacinta", lastName: "John", fullName: "Jacinta John", rollNumber: "20203425", class: "Pre-Nursery", feesPaid: false, access: false, pdfName: "20203425.pdf" },
-                { id: 2, firstName: "Gabriella", lastName: "Uba", fullName: "Gabriella Uba", rollNumber: "20933225", class: "Pre-Nursery", feesPaid: false, access: false, pdfName: "20933225.pdf" },
-                { id: 3, firstName: "Williams", lastName: "Julius", fullName: "Williams Julius", rollNumber: "20458325", class: "Pre-Nursery", feesPaid: false, access: false, pdfName: "20458325.pdf" },
-                { id: 4, firstName: "Nanpyal", lastName: "Luke", fullName: "Nanpyal Luke", rollNumber: "20148325", class: "Pre-Nursery", feesPaid: false, access: false, pdfName: "20148325.pdf" },
-                { id: 5, firstName: "King David", lastName: "Francis", fullName: "King David Francis", rollNumber: "20670425", class: "Pre-Nursery", feesPaid: false, access: false, pdfName: "20670425.pdf" },
-                { id: 6, firstName: "Enoch", lastName: "Louis", fullName: "Enoch Louis", rollNumber: "20182925", class: "Pre-Nursery", feesPaid: false, access: false, pdfName: "20182925.pdf" }
-            ];
-            
+        // LOAD FROM FIREBASE
+        async function loadStudentsFromFirebase() {
             try {
-                if (database && isFirebaseConnected && !usingExampleConfig) {
-                    // Try to load from Firebase
-                    console.log("🌐 Loading from Firebase...");
-                    const snapshot = await database.ref('students/preNursery').once('value');
-                    const firebaseData = snapshot.val();
-                    
-                    if (firebaseData && Array.isArray(firebaseData) && firebaseData.length > 0) {
-                        students = firebaseData;
-                        console.log("✅ Loaded from Firebase:", students.length, "students");
-                        updateStatus("CLOUD SYNC ACTIVE", true);
-                        document.getElementById('modeIndicator').className = 'mode-indicator mode-cloud';
-                        document.getElementById('modeIndicator').innerHTML = '<i class="fas fa-cloud"></i> CLOUD MODE: Changes sync with phones';
-                        document.getElementById('syncStatus').innerHTML = '<span style="color:#10b981;">CLOUD SYNC:</span> Changes WILL sync with phones';
-                    } else {
-                        // No data in Firebase, save defaults
-                        students = defaultStudents;
-                        await database.ref('students/preNursery').set(students);
-                        console.log("💾 Saved default students to Firebase");
-                    }
-                } else {
-                    // Use local data
-                    console.log("💻 Using LOCAL data");
-                    students = defaultStudents;
-                    updateStatus("LOCAL MODE", false);
-                    document.getElementById('modeIndicator').className = 'mode-indicator mode-local';
-                    document.getElementById('modeIndicator').innerHTML = '<i class="fas fa-exclamation-triangle"></i> LOCAL MODE: Changes won\'t sync with phones';
-                    document.getElementById('syncStatus').innerHTML = '<span style="color:#ef4444;">LOCAL MODE:</span> Changes WON\'T sync with phones';
+                const snapshot = await window.firebaseGet(window.firebaseRef(window.firebaseDatabase, 'students/preNursery'));
+                if (snapshot.exists()) {
+                    students = snapshot.val();
                 }
+                displayStudents();
             } catch (error) {
-                // Fallback to local data
-                console.error("❌ Load error, using local data:", error);
-                students = defaultStudents;
-                updateStatus("LOCAL (ERROR)", false);
+                console.log("Using local data:", error);
+                displayStudents();
             }
-            
-            // Display students
-            displayStudents();
         }
 
-        // ============================================
-        // 5. DISPLAY STUDENTS
-        // ============================================
+        // SAVE TO FIREBASE
+        async function saveToFirebase() {
+            try {
+                await window.firebaseSet(window.firebaseRef(window.firebaseDatabase, 'students/preNursery'), students);
+                console.log("✅ Saved to Firebase");
+            } catch (error) {
+                console.log("Save error:", error);
+            }
+        }
+
+        // DISPLAY STUDENTS
         function displayStudents() {
             const grid = document.getElementById('studentsGrid');
+            grid.innerHTML = '';
             
-            if (students.length === 0) {
-                grid.innerHTML = '<div style="text-align:center; padding:40px; color:#64748b;">No students found</div>';
-                return;
-            }
+            let granted = 0, denied = 0;
             
-            let html = '';
-            let grantedCount = 0;
-            let deniedCount = 0;
-            
-            // Sort by name
-            const sorted = [...students].sort((a, b) => a.fullName.localeCompare(b.fullName));
-            
-            sorted.forEach(student => {
-                if (student.access) grantedCount++;
-                else deniedCount++;
+            students.forEach(student => {
+                if (student.access) granted++; else denied++;
                 
-                html += `
+                grid.innerHTML += `
                 <div class="student-card ${student.access ? 'granted' : 'denied'}">
                     <div class="student-name">${student.fullName}</div>
                     <div class="student-details">
-                        <div><strong>Roll Number:</strong> <span class="roll-display">${student.rollNumber}</span></div>
-                        <div><strong>Class:</strong> ${student.class}</div>
-                        <div><strong>PDF File:</strong> <code>${student.pdfName}</code></div>
-                        <div><strong>Fees:</strong> ${student.feesPaid ? '<span style="color:#10b981;">PAID ✓</span>' : '<span style="color:#ef4444;">PENDING ✗</span>'}</div>
+                        <div><strong>Roll:</strong> <span class="roll-display">${student.rollNumber}</span></div>
+                        <div><strong>PDF:</strong> <code>${student.pdfName}</code></div>
+                        <div><strong>Fees:</strong> ${student.feesPaid ? 'PAID ✓' : 'PENDING ✗'}</div>
                     </div>
-                    
                     <div class="status-badge ${student.access ? 'status-granted' : 'status-denied'}">
                         ${student.access ? 'ACCESS GRANTED' : 'ACCESS DENIED'}
                     </div>
-                    
                     <div class="action-buttons">
                         ${!student.access ? 
-                            `<button class="action-btn grant-btn" onclick="grantAccess(${student.id})">
-                                Grant Access
-                            </button>` : 
-                            `<button class="action-btn revoke-btn" onclick="revokeAccess(${student.id})">
-                                Revoke Access
-                            </button>`}
+                            `<button class="action-btn grant-btn" onclick="grantAccess(${student.id})">Grant Access</button>` : 
+                            `<button class="action-btn revoke-btn" onclick="revokeAccess(${student.id})">Revoke Access</button>`}
                     </div>
-                </div>
-                `;
+                </div>`;
             });
             
-            grid.innerHTML = html;
-            
-            // Update stats
             document.getElementById('totalStudents').textContent = students.length;
-            document.getElementById('accessGranted').textContent = grantedCount;
-            document.getElementById('accessDenied').textContent = deniedCount;
-            
-            console.log(`📊 Displayed ${students.length} students`);
+            document.getElementById('accessGranted').textContent = granted;
+            document.getElementById('accessDenied').textContent = denied;
         }
 
-        // ============================================
-        // 6. GRANT ACCESS
-        // ============================================
+        // GRANT ACCESS
         async function grantAccess(studentId) {
             const student = students.find(s => s.id === studentId);
-            if (!student) {
-                alert("Student not found!");
-                return;
+            if (student) {
+                student.access = true;
+                student.feesPaid = true;
+                await saveToFirebase();
+                displayStudents();
+                alert(`✅ Access granted to ${student.fullName}`);
             }
-            
-            student.access = true;
-            student.feesPaid = true;
-            
-            // Save to Firebase if connected
-            if (database && isFirebaseConnected && !usingExampleConfig) {
-                try {
-                    await database.ref('students/preNursery').set(students);
-                    alert(`✅ Access GRANTED to ${student.fullName}\n\n🌐 Saved to CLOUD - Students on phones can now see results!`);
-                } catch (error) {
-                    alert(`✅ Access granted to ${student.fullName}\n\n❌ CLOUD save failed: ${error.message}`);
-                }
-            } else {
-                alert(`✅ Access GRANTED to ${student.fullName}\n\n⚠️ LOCAL MODE - Changes NOT saved to cloud\nStudents on phones WON'T see changes.`);
-            }
-            
-            displayStudents();
         }
 
-        // ============================================
-        // 7. REVOKE ACCESS
-        // ============================================
+        // REVOKE ACCESS
         async function revokeAccess(studentId) {
             const student = students.find(s => s.id === studentId);
-            if (!student) {
-                alert("Student not found!");
-                return;
-            }
-            
-            student.access = false;
-            student.feesPaid = false;
-            
-            // Save to Firebase if connected
-            if (database && isFirebaseConnected && !usingExampleConfig) {
-                try {
-                    await database.ref('students/preNursery').set(students);
-                    alert(`⚠️ Access REVOKED from ${student.fullName}\n\n🌐 Saved to CLOUD`);
-                } catch (error) {
-                    alert(`⚠️ Access revoked from ${student.fullName}\n\n❌ CLOUD save failed`);
-                }
-            } else {
-                alert(`⚠️ Access REVOKED from ${student.fullName}\n\n⚠️ LOCAL MODE - Not saved to cloud`);
-            }
-            
-            displayStudents();
-        }
-
-        // ============================================
-        // 8. UPDATE STATUS DISPLAY
-        // ============================================
-        function updateStatus(status, isOnline) {
-            const statusEl = document.getElementById('connectionStatus');
-            statusEl.textContent = status;
-            statusEl.className = `status-indicator ${isOnline ? 'status-online' : 'status-offline'}`;
-        }
-
-        // ============================================
-        // 9. CHECK PASSWORD
-        // ============================================
-        function checkPassword() {
-            const password = document.getElementById('adminPassword').value;
-            
-            if (password === 'KALELTHELASTSONOFKRYPTON') {
-                // Show admin panel
-                document.getElementById('passwordScreen').style.display = 'none';
-                document.getElementById('managementSection').style.display = 'block';
-                
-                // Initialize Firebase
-                initializeFirebase();
-                
-                // Load students
-                loadStudents();
-                
-                // Setup search
-                document.getElementById('searchInput').addEventListener('input', function() {
-                    const term = this.value.toLowerCase();
-                    const filtered = students.filter(s => 
-                        s.fullName.toLowerCase().includes(term) || 
-                        s.rollNumber.includes(term)
-                    );
-                    
-                    if (term === '') {
-                        displayStudents();
-                    } else {
-                        // Temporarily display filtered results
-                        const tempStudents = students;
-                        students = filtered;
-                        displayStudents();
-                        students = tempStudents;
-                    }
-                });
-                
-            } else {
-                document.getElementById('passwordError').style.display = 'block';
-                document.getElementById('adminPassword').value = '';
+            if (student) {
+                student.access = false;
+                student.feesPaid = false;
+                await saveToFirebase();
+                displayStudents();
+                alert(`⚠️ Access revoked from ${student.fullName}`);
             }
         }
 
-        // ============================================
-        // 10. LOGOUT
-        // ============================================
+        // SEARCH
+        function searchStudents() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = students.filter(s => s.fullName.toLowerCase().includes(term) || s.rollNumber.includes(term));
+            
+            const grid = document.getElementById('studentsGrid');
+            grid.innerHTML = '';
+            
+            filtered.forEach(student => {
+                grid.innerHTML += `
+                <div class="student-card ${student.access ? 'granted' : 'denied'}">
+                    <div class="student-name">${student.fullName}</div>
+                    <div class="student-details">
+                        <div><strong>Roll:</strong> <span class="roll-display">${student.rollNumber}</span></div>
+                        <div><strong>PDF:</strong> <code>${student.pdfName}</code></div>
+                    </div>
+                    <div class="action-buttons">
+                        ${!student.access ? 
+                            `<button class="action-btn grant-btn" onclick="grantAccess(${student.id})">Grant Access</button>` : 
+                            `<button class="action-btn revoke-btn" onclick="revokeAccess(${student.id})">Revoke Access</button>`}
+                    </div>
+                </div>`;
+            });
+        }
+
+        // LOGOUT
         function logout() {
-            if (confirm('Are you sure you want to logout?')) {
+            if (confirm('Logout?')) {
                 document.getElementById('passwordScreen').style.display = 'block';
                 document.getElementById('managementSection').style.display = 'none';
-                document.getElementById('passwordError').style.display = 'none';
                 document.getElementById('adminPassword').value = '';
-                document.getElementById('adminPassword').focus();
+                document.getElementById('passwordError').style.display = 'none';
             }
         }
 
-        // ============================================
-        // 11. CHECK ADMIN URL
-        // ============================================
-        function checkAdminURL() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('admin') !== '1') {
-                window.location.href = 'select class.html';
-            }
-        }
-
-        // ============================================
-        // 12. PAGE INITIALIZATION
-        // ============================================
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("🚀 Admin page loaded");
-            
-            // Check URL
-            checkAdminURL();
-            
-            // Setup login button
-            document.getElementById('loginButton').addEventListener('click', checkPassword);
-            
-            // Setup logout button
-            document.getElementById('logoutButton').addEventListener('click', logout);
-            
-            // Enter key for password
-            document.getElementById('adminPassword').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') checkPassword();
-            });
-            
-            // Focus on password
-            document.getElementById('adminPassword').focus();
-            
-            console.log("✅ Ready. Password: KALELTHELASTSONOFKRYPTON");
+        // INIT
+        document.getElementById('adminPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkPassword();
         });
-
-        // ============================================
-        // 13. DEBUG HELPER
-        // ============================================
-        // Add debug button
-        setTimeout(() => {
-            const debugBtn = document.createElement('button');
-            debugBtn.innerHTML = '🛠️ DEBUG';
-            debugBtn.style.position = 'fixed';
-            debugBtn.style.top = '10px';
-            debugBtn.style.right = '10px';
-            debugBtn.style.padding = '8px 12px';
-            debugBtn.style.background = '#ef4444';
-            debugBtn.style.color = 'white';
-            debugBtn.style.border = 'none';
-            debugBtn.style.borderRadius = '6px';
-            debugBtn.style.cursor = 'pointer';
-            debugBtn.style.zIndex = '9999';
-            
-            debugBtn.onclick = function() {
-                console.log("=== DEBUG INFO ===");
-                console.log("Firebase config valid:", !usingExampleConfig);
-                console.log("Firebase connected:", isFirebaseConnected);
-                console.log("Database:", database);
-                console.log("Students loaded:", students.length);
-                console.log("Firebase config:", firebaseConfig);
-                alert(`Debug info logged to console (F12)\n\nFirebase: ${isFirebaseConnected ? '✅ Connected' : '❌ Not connected'}\nMode: ${usingExampleConfig ? 'LOCAL' : 'CLOUD'}`);
-            };
-            
-            document.body.appendChild(debugBtn);
-        }, 1000);
     </script>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </body>
 </html>
