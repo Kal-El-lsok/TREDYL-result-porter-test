@@ -5,9 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pre-Nursery Admin - TREDYL SCHOOLS</title>
     
-    <!-- FIREBASE SDK v9 (NOT v12) -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+    <!-- SIMPLE FIREBASE SETUP -->
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbswCKXHCr_d_CKY3Ad2WQyflvg7bJV94",
+            authDomain: "tredyl-schools.firebaseapp.com",
+            databaseURL: "https://tredyl-schools-default-rtdb.firebaseio.com",
+            projectId: "tredyl-schools",
+            storageBucket: "tredyl-schools.firebasestorage.app",
+            messagingSenderId: "810112149886",
+            appId: "1:810112149886:web:0f915a9c6e7f2cc1cdab2f"
+        };
+    </script>
+    
+    <!-- Load Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
@@ -42,29 +56,6 @@
         .search-input { width: 100%; padding: 12px 15px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; }
         .roll-display { font-family: 'Courier New', monospace; font-weight: bold; color: #1e293b; }
     </style>
-    
-    <script>
-        // FIREBASE CONFIG
-        const firebaseConfig = {
-            apiKey: "AIzaSyBbswCKXHCr_d_CKY3Ad2WQyflvg7bJV94",
-            authDomain: "tredyl-schools.firebaseapp.com",
-            databaseURL: "https://tredyl-schools-default-rtdb.firebaseio.com",
-            projectId: "tredyl-schools",
-            storageBucket: "tredyl-schools.firebasestorage.app",
-            messagingSenderId: "810112149886",
-            appId: "1:810112149886:web:0f915a9c6e7f2cc1cdab2f"
-        };
-        
-        // Initialize Firebase
-        let database;
-        try {
-            const app = firebase.initializeApp(firebaseConfig);
-            database = firebase.database();
-            console.log("✅ Admin: Firebase ready");
-        } catch (error) {
-            console.error("Admin Firebase error:", error);
-        }
-    </script>
 </head>
 <body>
     <div class="admin-container">
@@ -106,6 +97,16 @@
     </div>
 
     <script>
+        // Initialize Firebase
+        let database;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            console.log("✅ Admin: Firebase ready");
+        } catch (error) {
+            console.error("Firebase error:", error);
+        }
+        
         // STUDENT DATA
         let students = [
             { id: 1, fullName: "Jacinta John", rollNumber: "20203425", access: false, pdfName: "20203425.pdf", class: "Pre-Nursery", feesPaid: false },
