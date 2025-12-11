@@ -7,12 +7,31 @@
     <link rel="stylesheet" href="select class.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- FIREBASE SCRIPTS - ADD THESE -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+    <!-- FIREBASE v12 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbswCKXHCr_d_CKY3Ad2WQyflvg7bJV94",
+            authDomain: "tredyl-schools.firebaseapp.com",
+            databaseURL: "https://tredyl-schools-default-rtdb.firebaseio.com",
+            projectId: "tredyl-schools",
+            storageBucket: "tredyl-schools.firebasestorage.app",
+            messagingSenderId: "810112149886",
+            appId: "1:810112149886:web:0f915a9c6e7f2cc1cdab2f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        
+        window.firebaseDatabase = database;
+        window.firebaseRef = ref;
+        window.firebaseGet = get;
+        console.log("✅ Firebase ready");
+    </script>
     
     <style>
-        /* Pre-Nursery Results Page Styles */
         .prenursery-container {
             max-width: 800px;
             margin: 2rem auto;
@@ -76,10 +95,6 @@
         .check-btn-prenursery:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
-        }
-        
-        .check-btn-prenursery:active {
-            transform: translateY(0);
         }
         
         .error-box-prenursery {
@@ -218,14 +233,12 @@
         </nav>
 
         <div class="prenursery-container">
-            <!-- Back Navigation -->
             <div class="back-nav">
                 <a href="select class.html" class="back-btn">
                     <i class="fas fa-arrow-left"></i> BACK TO CLASS SELECTION
                 </a>
             </div>
 
-            <!-- Roll Number Form -->
             <div class="prenursery-form">
                 <div class="prenursery-icon">
                     <i class="fas fa-baby"></i>
@@ -245,13 +258,11 @@
                     <p><i class="fas fa-info-circle"></i> Enter your 8-digit roll number only</p>
                 </div>
                 
-                <!-- Error Message -->
                 <div class="error-box-prenursery" id="errorBox">
                     <i class="fas fa-exclamation-circle"></i>
                     <span id="errorText">Invalid roll number</span>
                 </div>
                 
-                <!-- Access Denied Message -->
                 <div class="access-denied-box" id="accessDeniedBox">
                     <i class="fas fa-lock"></i>
                     <h3 style="margin-bottom: 10px;">RESULT NOT AVAILABLE</h3>
@@ -262,7 +273,6 @@
                 </div>
             </div>
 
-            <!-- Results Display -->
             <div class="results-box-prenursery" id="resultsBox">
                 <div class="student-header-prenursery">
                     <h2 id="studentName" style="font-size: 1.8rem; margin-bottom: 10px;">STUDENT NAME</h2>
@@ -302,7 +312,6 @@
             </div>
         </div>
 
-        <!-- Footer -->
         <footer>
             <div class="footer-content">
                 <div class="footer-links">
@@ -350,33 +359,7 @@
     </section>
 
     <script>
-        // ============================================
-        // FIREBASE CONFIGURATION
-        // ============================================
-        // REPLACE WITH YOUR ACTUAL FIREBASE CONFIG
-       const firebaseConfig = {
-    apiKey: "AIzaSyBbswCKXHCr_d_CKY3Ad2WQyflvg7bJV94",
-    authDomain: "tredyl-schools.firebaseapp.com",
-    projectId: "tredyl-schools",
-    storageBucket: "tredyl-schools.firebasestorage.app",
-    messagingSenderId: "810112149886",
-    appId: "1:810112149886:web:0f915a9c6e7f2cc1cdab2f",
-    measurementId: "G-NY58XPVMD9"
-        };
-
-        // Initialize Firebase
-        let database;
-        try {
-            firebase.initializeApp(firebaseConfig);
-            database = firebase.database();
-            console.log("✅ Firebase initialized successfully");
-        } catch (error) {
-            console.error("❌ Firebase initialization error:", error);
-        }
-
-        // ============================================
-        // MOBILE MENU FUNCTIONS
-        // ============================================
+        // MOBILE MENU
         function showMenu() {
             document.getElementById("navLinks").classList.add("active");
         }
@@ -385,19 +368,15 @@
             document.getElementById("navLinks").classList.remove("active");
         }
 
-        // ============================================
-        // CHECK RESULT FUNCTION
-        // ============================================
+        // CHECK RESULT
         async function checkResult() {
-            console.log("🔍 Checking result...");
-            
             const rollNumber = document.getElementById('rollNumber').value.trim();
             const errorBox = document.getElementById('errorBox');
             const errorText = document.getElementById('errorText');
             const accessDeniedBox = document.getElementById('accessDeniedBox');
             const resultsBox = document.getElementById('resultsBox');
             
-            // Hide all messages first
+            // Hide all messages
             errorBox.style.display = 'none';
             accessDeniedBox.style.display = 'none';
             resultsBox.style.display = 'none';
@@ -409,25 +388,13 @@
                 return;
             }
             
-            console.log("📋 Valid roll number entered:", rollNumber);
-            
             try {
-                // Check if Firebase is available
-                if (!database) {
-                    console.warn("⚠️ Firebase not available, using test mode");
-                    // Test mode - for debugging
-                    testModeCheck(rollNumber);
-                    return;
-                }
-                
                 // Get data from Firebase
-                const snapshot = await database.ref('students/preNursery').get();
+                const snapshot = await window.firebaseGet(window.firebaseRef(window.firebaseDatabase, 'students/preNursery'));
                 const students = snapshot.val();
                 
-                console.log("📊 Firebase data:", students);
-                
                 if (!students || students.length === 0) {
-                    errorText.textContent = 'No student records found. Please contact admin.';
+                    errorText.textContent = 'System updating. Try again in 2 minutes.';
                     errorBox.style.display = 'flex';
                     return;
                 }
@@ -438,7 +405,6 @@
                 if (student) {
                     // Check if student has access
                     if (student.access === true) {
-                        console.log("✅ Access GRANTED for:", student.fullName);
                         // Student has access - show results
                         document.getElementById('studentName').textContent = student.fullName;
                         document.getElementById('displayRoll').textContent = rollNumber;
@@ -446,66 +412,22 @@
                         resultsBox.style.display = 'block';
                         resultsBox.scrollIntoView({ behavior: 'smooth' });
                     } else {
-                        console.log("❌ Access DENIED for:", student.fullName);
                         // Student doesn't have access
                         accessDeniedBox.style.display = 'block';
                         accessDeniedBox.scrollIntoView({ behavior: 'smooth' });
                     }
                 } else {
-                    errorText.textContent = 'Roll number not found. Please check and try again.';
+                    errorText.textContent = 'Invalid roll number. Please check and try again.';
                     errorBox.style.display = 'flex';
                 }
             } catch (error) {
-                console.error("🔥 Firebase error:", error);
-                // Fallback to test mode if Firebase fails
-                testModeCheck(rollNumber);
-            }
-        }
-
-        // ============================================
-        // TEST MODE (if Firebase fails)
-        // ============================================
-        function testModeCheck(rollNumber) {
-            console.log("🧪 Using test mode for roll:", rollNumber);
-            
-            // Test student data
-            const testStudents = [
-                { rollNumber: "20203425", fullName: "Jacinta John", access: true, pdfName: "20203425.pdf" },
-                { rollNumber: "20933225", fullName: "Gabriella Uba", access: false, pdfName: "20933225.pdf" },
-                { rollNumber: "20458325", fullName: "Williams Julius", access: false, pdfName: "20458325.pdf" },
-                { rollNumber: "20148325", fullName: "Nanpyal Luke", access: false, pdfName: "20148325.pdf" },
-                { rollNumber: "20670425", fullName: "King David Francis", access: false, pdfName: "20670425.pdf" },
-                { rollNumber: "20182925", fullName: "Enoch Louis", access: false, pdfName: "20182925.pdf" }
-            ];
-            
-            const student = testStudents.find(s => s.rollNumber === rollNumber);
-            const errorBox = document.getElementById('errorBox');
-            const errorText = document.getElementById('errorText');
-            const accessDeniedBox = document.getElementById('accessDeniedBox');
-            const resultsBox = document.getElementById('resultsBox');
-            
-            if (student) {
-                if (student.access) {
-                    document.getElementById('studentName').textContent = student.fullName;
-                    document.getElementById('displayRoll').textContent = rollNumber;
-                    document.getElementById('pdfFileName').textContent = student.pdfName;
-                    resultsBox.style.display = 'block';
-                    resultsBox.scrollIntoView({ behavior: 'smooth' });
-                    console.log("✅ Test mode: Access granted");
-                } else {
-                    accessDeniedBox.style.display = 'block';
-                    accessDeniedBox.scrollIntoView({ behavior: 'smooth' });
-                    console.log("❌ Test mode: Access denied");
-                }
-            } else {
-                errorText.textContent = 'Roll number not found. Test numbers: 20203425, 20933225, etc.';
+                console.error("Database error:", error);
+                errorText.textContent = 'Network error. Please check internet connection.';
                 errorBox.style.display = 'flex';
             }
         }
 
-        // ============================================
-        // PRINT RESULT FUNCTION
-        // ============================================
+        // PRINT RESULT
         function printResult() {
             const studentName = document.getElementById('studentName').textContent;
             const rollNumber = document.getElementById('displayRoll').textContent;
@@ -593,9 +515,7 @@
             printWindow.document.close();
         }
 
-        // ============================================
-        // DOWNLOAD PDF FUNCTION
-        // ============================================
+        // DOWNLOAD PDF
         function downloadPDF() {
             const rollNumber = document.getElementById('displayRoll').textContent;
             const studentName = document.getElementById('studentName').textContent;
@@ -615,9 +535,7 @@
             alert(`Downloading: ${pdfName}\n\nStudent: ${studentName}`);
         }
 
-        // ============================================
-        // SHARE RESULT FUNCTION
-        // ============================================
+        // SHARE RESULT
         function shareResult() {
             const studentName = document.getElementById('studentName').textContent;
             const rollNumber = document.getElementById('displayRoll').textContent;
@@ -637,11 +555,9 @@
             }
         }
 
-        // ============================================
-        // PAGE INITIALIZATION
-        // ============================================
+        // INITIALIZE PAGE
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("🚀 Page loaded - Initializing...");
+            console.log("Page loaded");
             
             // Get elements
             const checkBtn = document.getElementById('checkBtn');
@@ -650,35 +566,23 @@
             const downloadBtn = document.getElementById('downloadBtn');
             const shareBtn = document.getElementById('shareBtn');
             
-            // DEBUG: Test if button exists
-            console.log("Check button found:", checkBtn);
-            console.log("Roll input found:", rollInput);
-            
             // Add event listeners
-            if (checkBtn) {
-                checkBtn.addEventListener('click', checkResult);
-                console.log("✅ Check button listener added");
-            } else {
-                console.error("❌ Check button not found!");
-            }
-            
-            if (printBtn) printBtn.addEventListener('click', printResult);
-            if (downloadBtn) downloadBtn.addEventListener('click', downloadPDF);
-            if (shareBtn) shareBtn.addEventListener('click', shareResult);
+            checkBtn.addEventListener('click', checkResult);
+            printBtn.addEventListener('click', printResult);
+            downloadBtn.addEventListener('click', downloadPDF);
+            shareBtn.addEventListener('click', shareResult);
             
             // Press Enter to check result
-            if (rollInput) {
-                rollInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        checkResult();
-                    }
-                });
-                
-                // Format roll number input (numbers only)
-                rollInput.addEventListener('input', function(e) {
-                    this.value = this.value.replace(/\D/g, '').slice(0, 8);
-                });
-            }
+            rollInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkResult();
+                }
+            });
+            
+            // Format roll number input (numbers only)
+            rollInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/\D/g, '').slice(0, 8);
+            });
             
             // Close mobile menu on link click
             document.querySelectorAll('.nav-links a').forEach(link => {
@@ -688,50 +592,8 @@
             });
             
             // Focus on roll number input
-            if (rollInput) rollInput.focus();
-            
-            // TEST: Simple click test
-            setTimeout(() => {
-                console.log("🧪 Running self-test...");
-                if (checkBtn) {
-                    console.log("✅ Button is in DOM");
-                    // Test click programmatically
-                    checkBtn.style.backgroundColor = "#f59e0b";
-                    console.log("✅ Button styling applied");
-                }
-            }, 1000);
-            
-            console.log("✅ Initialization complete");
+            rollInput.focus();
         });
-
-        // ============================================
-        // EMERGENCY FIX: Direct button binding
-        // ============================================
-        // This ensures the button works even if other code fails
-        window.onload = function() {
-            const checkBtn = document.getElementById('checkBtn');
-            if (checkBtn) {
-                // Remove any existing listeners and add fresh one
-                checkBtn.onclick = checkResult;
-                console.log("🔄 Direct onclick handler set");
-            }
-            
-            // Test the button
-            setTimeout(function() {
-                console.log("🎯 Ready to check results!");
-                console.log("👉 Enter a roll number and click CHECK RESULT");
-                console.log("👉 Test with: 20203425 (should work in test mode)");
-                console.log("👉 Test with: 20933225 (should show access denied)");
-            }, 500);
-        };
     </script>
-    <script>
-    // EMERGENCY FIX - Force button to work
-    document.getElementById('checkBtn').onclick = function() {
-        alert("Button clicked! Testing...");
-        // Then run the real function
-        checkResult();
-    };
-</script>
 </body>
 </html>
