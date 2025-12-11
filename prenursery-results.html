@@ -345,8 +345,19 @@
     </section>
 
     <script>
+// ==========================================// Mobile Menu Functions
+function showMenu() {
+    document.getElementById("navLinks").classList.add("active");
+}
+
+function hideMenu() {
+    document.getElementById("navLinks").classList.remove("active");
+}
+
 // ============================================
-==
+// 1. FIREBASE CONFIGURATION
+// ============================================
+===
 // 1. PASTE YOUR FIREBASE CONFIG HERE
 // ============================================
   const firebaseConfig = {
@@ -356,7 +367,6 @@
     storageBucket: "tredyl-schools.firebasestorage.app",
     messagingSenderId: "810112149886",
     appId: "1:810112149886:web:0f915a9c6e7f2cc1cdab2f",
-    measurementId: "G-NY58XPVMD9"
   };
 
 
@@ -367,70 +377,97 @@
   const analytics = getAnalytics(app);
 
 // ============================================
-// 3. CHECK RESULT (MAIN FUNCTION - CHANGED)
+
+let database; // Will hold Firebase database reference
+
+// ============================================
+// 2. CHECK RESULT FUNCTION
 // ============================================
 async function checkResult() {
+    console.log("Check Result button clicked");
+    
     const rollNumber = document.getElementById('rollNumber').value.trim();
     const errorBox = document.getElementById('errorBox');
     const errorText = document.getElementById('errorText');
     const accessDeniedBox = document.getElementById('accessDeniedBox');
     const resultsBox = document.getElementById('resultsBox');
     
-    // Hide all messages
+    // Hide all messages first
     errorBox.style.display = 'none';
     accessDeniedBox.style.display = 'none';
     resultsBox.style.display = 'none';
     
     // Validate roll number
     if (!rollNumber || rollNumber.length !== 8 || !/^\d+$/.test(rollNumber)) {
-        errorText.textContent = 'Please enter valid 8-digit roll number';
+        console.log("Invalid roll number:", rollNumber);
+        errorText.textContent = 'Please enter a valid 8-digit roll number (numbers only)';
         errorBox.style.display = 'flex';
         return;
     }
     
+    console.log("Valid roll number entered:", rollNumber);
+    
     try {
-        // CHECK FIREBASE DATABASE (NOT LOCALSTORAGE)
-        const snapshot = await database.ref('students/preNursery').once('value');
+        // Check if Firebase is initialized
+        if (!database) {
+            console.error("Firebase not initialized");
+            errorText.textContent = 'System error. Please refresh the page.';
+            errorBox.style.display = 'flex';
+            return;
+        }
+        
+        console.log("Checking Firebase database...");
+        
+        // Get data from Firebase
+        const snapshot = await database.ref('students/preNursery').get();
         const students = snapshot.val();
         
+        console.log("Firebase response:", students);
+        
         if (!students || students.length === 0) {
-            errorText.textContent = 'System updating. Try again in 2 minutes.';
+            console.log("No students found in database");
+            errorText.textContent = 'System updating. Please try again later.';
             errorBox.style.display = 'flex';
             return;
         }
         
         // Find student by roll number
         const student = students.find(s => s.rollNumber === rollNumber);
+        console.log("Found student:", student);
         
         if (student) {
-            // ✅ THIS IS THE FIX: Check Firebase access status
+            // Check if student has access
             if (student.access === true) {
-                // GRANTED: Show results
+                console.log("Access GRANTED for:", student.fullName);
+                // Student has access - show results
                 document.getElementById('studentName').textContent = student.fullName;
                 document.getElementById('displayRoll').textContent = rollNumber;
                 document.getElementById('pdfFileName').textContent = student.pdfName;
                 resultsBox.style.display = 'block';
                 resultsBox.scrollIntoView({ behavior: 'smooth' });
             } else {
-                // DENIED: Show message
+                console.log("Access DENIED for:", student.fullName);
+                // Student doesn't have access
                 accessDeniedBox.style.display = 'block';
                 accessDeniedBox.scrollIntoView({ behavior: 'smooth' });
             }
         } else {
-            errorText.textContent = 'Roll number not found. Check and try again.';
+            console.log("Roll number not found:", rollNumber);
+            errorText.textContent = 'Invalid roll number. Please check and try again.';
             errorBox.style.display = 'flex';
         }
     } catch (error) {
         console.error("Database error:", error);
-        errorText.textContent = 'Network error. Please check internet.';
+        errorText.textContent = 'Network error. Please check your internet connection.';
         errorBox.style.display = 'flex';
     }
 }
 
 // ============================================
-// 4. OTHER FUNCTIONS (KEEP SAME)
+// 3. OTHER FUNCTIONS
 // ============================================
 function printResult() {
+    console.log("Print button clicked");
     const studentName = document.getElementById('studentName').textContent;
     const rollNumber = document.getElementById('displayRoll').textContent;
     
@@ -441,8 +478,35 @@ function printResult() {
         <head>
             <title>${studentName} - Pre-Nursery Result</title>
             <style>
-                body { font-family: Arial; margin: 40px; }
-                .header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #f59e0b; padding-bottom: 20px; }
+                body { 
+                    font-family: Arial, sans-serif; 
+                    margin: 40px; 
+                    line-height: 1.6;
+                }
+                .header { 
+                    text-align: center; 
+                    margin-bottom: 30px; 
+                    border-bottom: 3px solid #f59e0b;
+                    padding-bottom: 20px; 
+                }
+                .student-info { 
+                    margin-bottom: 30px; 
+                    background: #f8fafc;
+                    padding: 20px;
+                    border-radius: 10px;
+                }
+                .notice { 
+                    margin-top: 40px; 
+                    padding: 15px; 
+                    border: 1px solid #ccc; 
+                    background: #f9f9f9; 
+                    border-radius: 8px;
+                }
+                .roll-number {
+                    font-family: 'Courier New', monospace;
+                    font-weight: bold;
+                    font-size: 1.1rem;
+                }
             </style>
         </head>
         <body>
@@ -452,19 +516,26 @@ function printResult() {
                 <p>2025/2026 Academic Session</p>
             </div>
             
-            <div style="margin-bottom: 30px; background: #f8fafc; padding: 20px; border-radius: 10px;">
+            <div class="student-info">
                 <h3 style="color: #475569;">STUDENT INFORMATION</h3>
                 <p><strong>Name:</strong> ${studentName}</p>
-                <p><strong>Roll Number:</strong> ${rollNumber}</p>
+                <p><strong>Roll Number:</strong> <span class="roll-number">${rollNumber}</span></p>
                 <p><strong>Class:</strong> Pre-Nursery</p>
                 <p><strong>Term:</strong> First Term 2025/2026</p>
                 <p><strong>Date Printed:</strong> ${new Date().toLocaleDateString()}</p>
             </div>
             
+            <div class="notice">
+                <p><strong>NOTE:</strong> This is a print preview. Download the official PDF (<code>${rollNumber}.pdf</code>) for the complete academic result.</p>
+                <p>Parent's/Guardian's Signature: __________________________</p>
+            </div>
+            
             <script>
                 window.onload = function() {
                     window.print();
-                    setTimeout(function() { window.close(); }, 1000);
+                    setTimeout(function() {
+                        window.close();
+                    }, 1000);
                 }
             <\/script>
         </body>
@@ -474,13 +545,17 @@ function printResult() {
 }
 
 function downloadPDF() {
+    console.log("Download button clicked");
     const rollNumber = document.getElementById('displayRoll').textContent;
     const studentName = document.getElementById('studentName').textContent;
-    const pdfName = `${rollNumber}.pdf`;
     
-    // Your PDF download logic (keep as is)
+    // PDF filename is just the roll number
+    const pdfName = `${rollNumber}.pdf`;
+    const pdfPath = `results/prenursery/${pdfName}`;
+    
+    // Create download link
     const link = document.createElement('a');
-    link.href = `results/prenursery/${pdfName}`;
+    link.href = pdfPath;
     link.download = pdfName;
     document.body.appendChild(link);
     link.click();
@@ -490,56 +565,99 @@ function downloadPDF() {
 }
 
 function shareResult() {
+    console.log("Share button clicked");
     const studentName = document.getElementById('studentName').textContent;
     const rollNumber = document.getElementById('displayRoll').textContent;
-    const shareText = `TREDYL Schools - Pre-Nursery Result\nStudent: ${studentName}\nRoll Number: ${rollNumber}`;
+    
+    const shareText = `TREDYL Schools - Pre-Nursery Result\nStudent: ${studentName}\nRoll Number: ${rollNumber}\nFirst Term 2025/2026`;
     
     if (navigator.share) {
-        navigator.share({ title: 'My Pre-Nursery Result', text: shareText });
+        navigator.share({
+            title: 'My Pre-Nursery Result',
+            text: shareText
+        });
     } else {
+        // Copy to clipboard
         navigator.clipboard.writeText(shareText).then(() => {
-            alert('✅ Result copied to clipboard!');
+            alert('✅ Result information copied to clipboard!\nYou can paste it anywhere to share.');
         });
     }
 }
 
 // ============================================
-// 5. INITIALIZE PAGE
+// 4. INITIALIZE FIREBASE
 // ============================================
-document.addEventListener('DOMContentLoaded', function() {
-    // Load Firebase scripts if not loaded
+function initializeFirebase() {
+    console.log("Initializing Firebase...");
+    
+    // Check if Firebase is already loaded
     if (typeof firebase === 'undefined') {
-        const script = document.createElement('script');
-        script.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-        script.onload = () => {
-            const script2 = document.createElement('script');
-            script2.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js';
-            script2.onload = () => {
-                firebase.initializeApp(firebaseConfig);
-            };
-            document.head.appendChild(script2);
-        };
-        document.head.appendChild(script);
+        console.error("Firebase library not loaded!");
+        alert("Firebase not loaded. Please check internet connection.");
+        return false;
     }
     
-    // Event listeners
-    document.getElementById('checkBtn').addEventListener('click', checkResult);
-    document.getElementById('printBtn').addEventListener('click', printResult);
-    document.getElementById('downloadBtn').addEventListener('click', downloadPDF);
-    document.getElementById('shareBtn').addEventListener('click', shareResult);
+    try {
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        database = firebase.database();
+        console.log("Firebase initialized successfully!");
+        return true;
+    } catch (error) {
+        console.error("Firebase initialization error:", error);
+        alert("Firebase initialization failed: " + error.message);
+        return false;
+    }
+}
+
+// ============================================
+// 5. PAGE INITIALIZATION
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Page loaded, setting up event listeners...");
     
-    // Enter key to check
-    document.getElementById('rollNumber').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') checkResult();
+    // Initialize Firebase
+    if (!initializeFirebase()) {
+        console.error("Failed to initialize Firebase");
+    }
+    
+    // Get elements
+    const checkBtn = document.getElementById('checkBtn');
+    const rollInput = document.getElementById('rollNumber');
+    const printBtn = document.getElementById('printBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const shareBtn = document.getElementById('shareBtn');
+    
+    // Add event listeners
+    checkBtn.addEventListener('click', checkResult);
+    
+    if (printBtn) printBtn.addEventListener('click', printResult);
+    if (downloadBtn) downloadBtn.addEventListener('click', downloadPDF);
+    if (shareBtn) shareBtn.addEventListener('click', shareResult);
+    
+    // Press Enter to check result
+    rollInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            checkResult();
+        }
     });
     
-    // Numbers only for roll number
-    document.getElementById('rollNumber').addEventListener('input', function(e) {
+    // Format roll number input (numbers only)
+    rollInput.addEventListener('input', function(e) {
         this.value = this.value.replace(/\D/g, '').slice(0, 8);
     });
     
-    // Focus on roll number
-    document.getElementById('rollNumber').focus();
+    // Close mobile menu on link click
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            hideMenu();
+        });
+    });
+    
+    // Focus on roll number input
+    rollInput.focus();
+    
+    console.log("Setup complete. Ready to check results.");
 });
     </script>
 </body>
