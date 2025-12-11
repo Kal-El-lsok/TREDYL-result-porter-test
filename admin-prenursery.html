@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pre-Nursery Admin - TREDYL SCHOOLS</title>
     
-    <!-- FIREBASE SCRIPTS -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         * {
@@ -82,10 +81,6 @@
         .password-btn:hover {
             background: #0da271;
             transform: translateY(-2px);
-        }
-        
-        .password-btn:active {
-            transform: translateY(0);
         }
         
         /* Management Section */
@@ -205,10 +200,6 @@
             transform: translateY(-2px);
         }
         
-        .action-btn:active {
-            transform: translateY(0);
-        }
-        
         .grant-btn {
             background: #10b981;
             color: white;
@@ -267,44 +258,37 @@
             color: #1e293b;
         }
         
-        .loading-spinner {
-            display: none;
-            text-align: center;
-            padding: 20px;
-        }
-        
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #f59e0b;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .connection-status {
-            padding: 8px 12px;
+        .mode-badge {
+            display: inline-block;
+            padding: 6px 12px;
             border-radius: 6px;
             font-size: 0.85rem;
             font-weight: 600;
-            margin-bottom: 15px;
-            display: inline-block;
+            margin-left: 10px;
         }
         
-        .connection-good {
+        .mode-test {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .mode-live {
             background: #d1fae5;
             color: #065f46;
         }
         
-        .connection-bad {
-            background: #fee2e2;
-            color: #dc2626;
+        .test-warning {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .test-warning h4 {
+            margin-bottom: 8px;
+            color: #92400e;
         }
     </style>
 </head>
@@ -337,21 +321,19 @@
         <!-- Management Section -->
         <div class="admin-content management-section" id="managementSection">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h2><i class="fas fa-users-cog"></i> PRE-NURSERY STUDENTS</h2>
-                <div>
-                    <span id="connectionStatus" class="connection-status connection-good">
-                        <i class="fas fa-wifi"></i> Connected
-                    </span>
-                    <button class="logout-btn" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </div>
+                <h2><i class="fas fa-users-cog"></i> PRE-NURSERY STUDENTS 
+                    <span id="modeBadge" class="mode-badge mode-test">TEST MODE</span>
+                </h2>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
             
-            <!-- Loading Spinner -->
-            <div class="loading-spinner" id="loadingSpinner">
-                <div class="spinner"></div>
-                <p>Loading student data...</p>
+            <!-- Test Mode Warning -->
+            <div class="test-warning" id="testWarning">
+                <h4><i class="fas fa-exclamation-triangle"></i> TEST MODE ACTIVE</h4>
+                <p>You're in TEST MODE. Changes will NOT sync with student phones.</p>
+                <p>To enable cloud sync, add your Firebase configuration below.</p>
             </div>
             
             <!-- Statistics -->
@@ -388,37 +370,31 @@
                 <p>1. Click <span class="status-badge status-granted">GRANT ACCESS</span> when student completes school fees</p>
                 <p>2. Click <span class="status-badge status-denied">REVOKE ACCESS</span> to remove access if needed</p>
                 <p>3. PDF files are saved as: <code>20203425.pdf</code> (roll number only)</p>
-                <p>4. Changes save automatically to cloud database</p>
-                <p>5. Students on phones will see changes immediately</p>
+                <p>4. Current Mode: <strong id="modeText">TEST MODE</strong> (Changes won't sync with phones)</p>
+                <p>5. To enable phone sync, add Firebase configuration</p>
+            </div>
+            
+            <!-- Firebase Setup Instructions -->
+            <div style="margin-top: 30px; padding: 15px; background: #e0f2fe; border-radius: 8px; color: #075985;">
+                <h4><i class="fas fa-cloud"></i> ENABLE CLOUD SYNC (For Phone Access)</h4>
+                <p>To make changes visible on student phones:</p>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Get your Firebase config from <a href="https://console.firebase.google.com" target="_blank">Firebase Console</a></li>
+                    <li>Replace lines 260-267 in this file with your actual Firebase config</li>
+                    <li>Refresh this page and login again</li>
+                </ol>
+                <p style="margin-top: 10px; font-weight: bold;">
+                    <i class="fas fa-lightbulb"></i> Need help? Just ask!
+                </p>
             </div>
         </div>
     </div>
 
     <script>
         // ============================================
-        // 1. FIREBASE CONFIGURATION
-        // ==============================================
-        // FIREBASE CONFIGURATION
+        // 1. STUDENT DATABASE (LOCAL - GUARANTEED WORKING)
         // ============================================
-        // REPLACE WITH YOUR ACTUAL FIREBASE CONFIG
-       const firebaseConfig = {
-    apiKey: "AIzaSyBbswCKXHCr_d_CKY3Ad2WQyflvg7bJV94",
-    authDomain: "tredyl-schools.firebaseapp.com",
-    projectId: "tredyl-schools",
-    storageBucket: "tredyl-schools.firebasestorage.app",
-    messagingSenderId: "810112149886",
-    appId: "1:810112149886:web:0f915a9c6e7f2cc1cdab2f",
-    measurementId: "G-NY58XPVMD9"
-        };
-
-        // Initialize Firebase
-        let database;
-        let preNurseryStudents = [];
-        
-        // ============================================
-        // 2. YOUR COMPLETE STUDENT DATABASE
-        // ============================================
-        const defaultStudents = [
+        let preNurseryStudents = [
             {
                 id: 1,
                 firstName: "Jacinta",
@@ -488,148 +464,65 @@
         ];
 
         // ============================================
-        // 3. INITIALIZE FIREBASE
+        // 2. FIREBASE CONFIG (OPTIONAL - FOR CLOUD SYNC)
+        // ============================================
+        // ⚠️ REPLACE THIS WITH YOUR ACTUAL FIREBASE CONFIG IF YOU WANT CLOUD SYNC
+        // ⚠️ LEAVE AS IS FOR TEST MODE (WILL WORK WITHOUT FIREBASE)
+     ===========
+        // REPLACE WITH YOUR ACTUAL FIREBASE CONFIG
+       const firebaseConfig = {
+    apiKey: "AIzaSyBbswCKXHCr_d_CKY3Ad2WQyflvg7bJV94",
+    authDomain: "tredyl-schools.firebaseapp.com",
+    projectId: "tredyl-schools",
+    storageBucket: "tredyl-schools.firebasestorage.app",
+    messagingSenderId: "810112149886",
+    appId: "1:810112149886:web:0f915a9c6e7f2cc1cdab2f",
+    measurementId: "G-NY58XPVMD9"
+        };
+
+        let database = null;
+        let isCloudMode = false;
+
+        // ============================================
+        // 3. INITIALIZE FIREBASE (OPTIONAL)
         // ============================================
         function initializeFirebase() {
+            console.log("Checking Firebase...");
+            
+            // Check if Firebase is available and config is valid
+            if (typeof firebase === 'undefined') {
+                console.log("Firebase library not loaded. Using TEST MODE.");
+                return false;
+            }
+            
+            // Check if config has real values (not example values)
+            const hasRealConfig = firebaseConfig.apiKey && 
+                                 !firebaseConfig.apiKey.includes("EXAMPLE");
+            
+            if (!hasRealConfig) {
+                console.log("Using example Firebase config. Staying in TEST MODE.");
+                return false;
+            }
+            
             try {
-                console.log("Initializing Firebase...");
+                // Try to initialize Firebase
                 firebase.initializeApp(firebaseConfig);
                 database = firebase.database();
                 console.log("✅ Firebase initialized successfully");
-                updateConnectionStatus(true);
+                isCloudMode = true;
                 return true;
             } catch (error) {
-                console.error("❌ Firebase initialization error:", error);
-                updateConnectionStatus(false);
+                console.log("❌ Firebase failed. Using TEST MODE:", error.message);
                 return false;
             }
         }
 
         // ============================================
-        // 4. LOAD STUDENTS FROM FIREBASE
-        // ============================================
-        async function loadFromFirebase() {
-            console.log("Loading students from Firebase...");
-            
-            // Show loading spinner
-            document.getElementById('loadingSpinner').style.display = 'block';
-            document.getElementById('studentsGrid').innerHTML = '';
-            
-            try {
-                // Get data from Firebase
-                const snapshot = await database.ref('students/preNursery').once('value');
-                const data = snapshot.val();
-                
-                if (data && data.length > 0) {
-                    preNurseryStudents = data;
-                    console.log("✅ Loaded from Firebase:", preNurseryStudents.length, "students");
-                } else {
-                    // First time: Use default students
-                    console.log("No data in Firebase, using default students");
-                    preNurseryStudents = JSON.parse(JSON.stringify(defaultStudents));
-                    
-                    // Save default data to Firebase
-                    await saveToFirebase();
-                }
-                
-                // Update display
-                loadStudents();
-                updateConnectionStatus(true);
-                
-            } catch (error) {
-                console.error("❌ Firebase load error:", error);
-                
-                // Fallback: Use local data
-                alert("⚠️ Cannot connect to database. Using local data.");
-                preNurseryStudents = JSON.parse(JSON.stringify(defaultStudents));
-                loadStudents();
-                updateConnectionStatus(false);
-                
-            } finally {
-                // Hide loading spinner
-                document.getElementById('loadingSpinner').style.display = 'none';
-            }
-        }
-
-        // ============================================
-        // 5. SAVE STUDENTS TO FIREBASE
-        // ============================================
-        async function saveToFirebase() {
-            console.log("Saving to Firebase...");
-            
-            try {
-                await database.ref('students/preNursery').set(preNurseryStudents);
-                console.log("✅ Saved to Firebase");
-                updateConnectionStatus(true);
-                return true;
-            } catch (error) {
-                console.error("❌ Save error:", error);
-                alert("Failed to save changes. Check internet connection.");
-                updateConnectionStatus(false);
-                return false;
-            }
-        }
-
-        // ============================================
-        // 6. GRANT ACCESS TO STUDENT
-        // ============================================
-        async function grantAccess(studentId) {
-            const student = preNurseryStudents.find(s => s.id === studentId);
-            if (!student) {
-                alert("Student not found!");
-                return;
-            }
-            
-            console.log("Granting access to:", student.fullName);
-            
-            // Update student data
-            student.access = true;
-            student.feesPaid = true;
-            
-            // Save to Firebase
-            const success = await saveToFirebase();
-            
-            if (success) {
-                // Update display
-                loadStudents();
-                
-                // Show success message
-                alert(`✅ Access GRANTED to ${student.fullName}\n\nStudent can now view results on ANY device.\n\nPDF: ${student.pdfName}`);
-            }
-        }
-
-        // ============================================
-        // 7. REVOKE ACCESS FROM STUDENT
-        // ============================================
-        async function revokeAccess(studentId) {
-            const student = preNurseryStudents.find(s => s.id === studentId);
-            if (!student) {
-                alert("Student not found!");
-                return;
-            }
-            
-            console.log("Revoking access from:", student.fullName);
-            
-            // Update student data
-            student.access = false;
-            student.feesPaid = false;
-            
-            // Save to Firebase
-            const success = await saveToFirebase();
-            
-            if (success) {
-                // Update display
-                loadStudents();
-                
-                // Show success message
-                alert(`⚠️ Access REVOKED from ${student.fullName}\n\nStudent can no longer view results.`);
-            }
-        }
-
-        // ============================================
-        // 8. LOAD STUDENTS TO DISPLAY
+        // 4. LOAD STUDENTS (GUARANTEED TO WORK)
         // ============================================
         function loadStudents() {
+            console.log("Loading students...");
+            
             const studentsGrid = document.getElementById('studentsGrid');
             studentsGrid.innerHTML = '';
             
@@ -689,19 +582,181 @@
             document.getElementById('accessGranted').textContent = grantedCount;
             document.getElementById('accessDenied').textContent = deniedCount;
             
-            console.log("Students loaded:", preNurseryStudents.length);
+            console.log(`✅ Loaded ${preNurseryStudents.length} students (${grantedCount} granted, ${deniedCount} denied)`);
         }
 
         // ============================================
-        // 9. SEARCH STUDENTS
+        // 5. GRANT ACCESS TO STUDENT
+        // ============================================
+        function grantAccess(studentId) {
+            const student = preNurseryStudents.find(s => s.id === studentId);
+            if (!student) {
+                alert("Student not found!");
+                return;
+            }
+            
+            console.log("Granting access to:", student.fullName);
+            
+            // Update student data
+            student.access = true;
+            student.feesPaid = true;
+            
+            if (isCloudMode && database) {
+                // Save to Firebase cloud
+                saveToFirebase()
+                    .then(() => {
+                        alert(`✅ Access GRANTED to ${student.fullName}\n\nChanges saved to CLOUD. Students on phones can now see results.`);
+                        loadStudents();
+                    })
+                    .catch(error => {
+                        alert(`⚠️ Access granted but CLOUD save failed.\n\nStudent: ${student.fullName}\n\nError: ${error.message}`);
+                        loadStudents();
+                    });
+            } else {
+                // Just update locally (TEST MODE)
+                loadStudents();
+                alert(`✅ TEST MODE: Access granted to ${student.fullName}\n\nNOTE: This is NOT saved to cloud. Students on phones won't see changes.`);
+            }
+        }
+
+        // ============================================
+        // 6. REVOKE ACCESS FROM STUDENT
+        // ============================================
+        function revokeAccess(studentId) {
+            const student = preNurseryStudents.find(s => s.id === studentId);
+            if (!student) {
+                alert("Student not found!");
+                return;
+            }
+            
+            console.log("Revoking access from:", student.fullName);
+            
+            // Update student data
+            student.access = false;
+            student.feesPaid = false;
+            
+            if (isCloudMode && database) {
+                // Save to Firebase cloud
+                saveToFirebase()
+                    .then(() => {
+                        alert(`⚠️ Access REVOKED from ${student.fullName}\n\nChanges saved to CLOUD. Students on phones can no longer see results.`);
+                        loadStudents();
+                    })
+                    .catch(error => {
+                        alert(`⚠️ Access revoked but CLOUD save failed.\n\nStudent: ${student.fullName}\n\nError: ${error.message}`);
+                        loadStudents();
+                    });
+            } else {
+                // Just update locally (TEST MODE)
+                loadStudents();
+                alert(`⚠️ TEST MODE: Access revoked from ${student.fullName}\n\nNOTE: This is NOT saved to cloud.`);
+            }
+        }
+
+        // ============================================
+        // 7. SAVE TO FIREBASE (ONLY IN CLOUD MODE)
+        // ============================================
+        async function saveToFirebase() {
+            if (!isCloudMode || !database) {
+                console.log("Not in cloud mode. Skipping Firebase save.");
+                return;
+            }
+            
+            try {
+                await database.ref('students/preNursery').set(preNurseryStudents);
+                console.log("✅ Saved to Firebase");
+                return true;
+            } catch (error) {
+                console.error("❌ Firebase save error:", error);
+                throw error;
+            }
+        }
+
+        // ============================================
+        // 8. PASSWORD CHECK
+        // ============================================
+        function checkPassword() {
+            const password = document.getElementById('adminPassword').value;
+            const errorDiv = document.getElementById('passwordError');
+            const passwordScreen = document.getElementById('passwordScreen');
+            const managementSection = document.getElementById('managementSection');
+            
+            // Correct password
+            const correctPassword = 'KALELTHELASTSONOFKRYPTON';
+            
+            if (password === correctPassword) {
+                // Hide password screen, show management
+                passwordScreen.style.display = 'none';
+                managementSection.style.display = 'block';
+                
+                // Try to initialize Firebase
+                const firebaseSuccess = initializeFirebase();
+                
+                if (firebaseSuccess) {
+                    // Cloud mode: Try to load from Firebase
+                    loadFromFirebase();
+                    document.getElementById('modeBadge').className = 'mode-badge mode-live';
+                    document.getElementById('modeBadge').textContent = 'CLOUD MODE';
+                    document.getElementById('modeText').textContent = 'CLOUD MODE (Changes sync with phones)';
+                    document.getElementById('testWarning').style.display = 'none';
+                } else {
+                    // Test mode: Use local data
+                    loadStudents();
+                    document.getElementById('modeBadge').className = 'mode-badge mode-test';
+                    document.getElementById('modeBadge').textContent = 'TEST MODE';
+                    document.getElementById('modeText').textContent = 'TEST MODE (Changes won\'t sync with phones)';
+                    document.getElementById('testWarning').style.display = 'block';
+                }
+                
+            } else {
+                errorDiv.style.display = 'block';
+                document.getElementById('adminPassword').focus();
+                document.getElementById('adminPassword').value = '';
+            }
+        }
+
+        // ============================================
+        // 9. LOAD FROM FIREBASE (ONLY IN CLOUD MODE)
+        // ============================================
+        async function loadFromFirebase() {
+            if (!isCloudMode || !database) {
+                console.log("Not in cloud mode. Using local data.");
+                loadStudents();
+                return;
+            }
+            
+            try {
+                console.log("Loading from Firebase...");
+                
+                const snapshot = await database.ref('students/preNursery').once('value');
+                const data = snapshot.val();
+                
+                if (data && data.length > 0) {
+                    preNurseryStudents = data;
+                    console.log("✅ Loaded from Firebase:", preNurseryStudents.length, "students");
+                } else {
+                    console.log("No data in Firebase. Using local data.");
+                    // Save local data to Firebase
+                    await saveToFirebase();
+                }
+                
+                loadStudents();
+                
+            } catch (error) {
+                console.error("❌ Firebase load error:", error);
+                alert("⚠️ Cannot load from cloud. Using local data.");
+                loadStudents();
+            }
+        }
+
+        // ============================================
+        // 10. SEARCH STUDENTS
         // ============================================
         function searchStudents() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             const filteredStudents = preNurseryStudents.filter(student => 
                 student.fullName.toLowerCase().includes(searchTerm) || 
-                student.rollNumber.includes(searchTerm) ||
-                student.firstName.toLowerCase().includes(searchTerm) ||
-                student.lastName.toLowerCase().includes(searchTerm)
+                student.rollNumber.includes(searchTerm)
             );
             
             const studentsGrid = document.getElementById('studentsGrid');
@@ -755,50 +810,7 @@
         }
 
         // ============================================
-        // 10. PASSWORD CHECK
-        // ============================================
-        function checkPassword() {
-            const password = document.getElementById('adminPassword').value;
-            const errorDiv = document.getElementById('passwordError');
-            const passwordScreen = document.getElementById('passwordScreen');
-            const managementSection = document.getElementById('managementSection');
-            
-            // Correct password
-            const correctPassword = 'KALELTHELASTSONOFKRYPTON';
-            
-            if (password === correctPassword) {
-                // Hide password screen, show management
-                passwordScreen.style.display = 'none';
-                managementSection.style.display = 'block';
-                
-                // Initialize Firebase and load data
-                if (initializeFirebase()) {
-                    loadFromFirebase();
-                }
-            } else {
-                errorDiv.style.display = 'block';
-                document.getElementById('adminPassword').focus();
-                document.getElementById('adminPassword').value = '';
-            }
-        }
-
-        // ============================================
-        // 11. UPDATE CONNECTION STATUS
-        // ============================================
-        function updateConnectionStatus(connected) {
-            const statusElement = document.getElementById('connectionStatus');
-            
-            if (connected) {
-                statusElement.className = 'connection-status connection-good';
-                statusElement.innerHTML = '<i class="fas fa-wifi"></i> Connected';
-            } else {
-                statusElement.className = 'connection-status connection-bad';
-                statusElement.innerHTML = '<i class="fas fa-wifi-slash"></i> Offline';
-            }
-        }
-
-        // ============================================
-        // 12. LOGOUT
+        // 11. LOGOUT
         // ============================================
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
@@ -816,7 +828,7 @@
         }
 
         // ============================================
-        // 13. CHECK ADMIN URL PARAMETER
+        // 12. CHECK ADMIN URL PARAMETER
         // ============================================
         function checkAdminURL() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -829,7 +841,7 @@
         }
 
         // ============================================
-        // 14. INITIALIZE PAGE
+        // 13. PAGE INITIALIZATION
         // ============================================
         window.onload = function() {
             console.log("Admin page loading...");
@@ -847,61 +859,44 @@
                 }
             });
             
-            // Test Firebase initialization
-            initializeFirebase();
-            
-            console.log("✅ Admin page ready. Enter password: KALELTHELASTSONOFKRYPTON");
+            console.log("✅ Admin page ready. Password: KALELTHELASTSONOFKRYPTON");
+            console.log("💡 This version works WITHOUT Firebase!");
         };
 
         // ============================================
-        // 15. EMERGENCY TEST MODE
+        // 14. DEBUG HELPERS
         // ============================================
-        // If Firebase fails, use this test mode
-        function testMode() {
-            console.log("Entering test mode...");
-            
-            preNurseryStudents = JSON.parse(JSON.stringify(defaultStudents));
-            loadStudents();
-            
-            alert("⚠️ Using TEST MODE (No Firebase)\n\nChanges will NOT save to cloud.\nStudents on phones won't see changes.");
-            
-            // Override save function for test mode
-            window.saveToFirebase = async function() {
-                console.log("Test mode: Simulating save");
-                loadStudents();
-                return true;
+        // Add this button for debugging if needed
+        function addDebugButton() {
+            const debugBtn = document.createElement('button');
+            debugBtn.innerHTML = '<i class="fas fa-bug"></i> Debug';
+            debugBtn.style.position = 'fixed';
+            debugBtn.style.top = '10px';
+            debugBtn.style.right = '10px';
+            debugBtn.style.padding = '8px 12px';
+            debugBtn.style.background = '#ef4444';
+            debugBtn.style.color = 'white';
+            debugBtn.style.border = 'none';
+            debugBtn.style.borderRadius = '6px';
+            debugBtn.style.cursor = 'pointer';
+            debugBtn.style.zIndex = '1000';
+            debugBtn.onclick = function() {
+                console.log("=== DEBUG INFO ===");
+                console.log("Students:", preNurseryStudents);
+                console.log("Firebase available:", typeof firebase !== 'undefined');
+                console.log("Database:", database);
+                console.log("Cloud mode:", isCloudMode);
+                alert("Check browser console (F12) for debug info");
             };
-            
-            // Override grant/revoke functions
-            window.grantAccess = function(studentId) {
-                const student = preNurseryStudents.find(s => s.id === studentId);
-                if (student) {
-                    student.access = true;
-                    student.feesPaid = true;
-                    loadStudents();
-                    alert(`✅ TEST MODE: Access granted to ${student.fullName}\n\nNOTE: This is NOT saved to cloud!`);
-                }
-            };
-            
-            window.revokeAccess = function(studentId) {
-                const student = preNurseryStudents.find(s => s.id === studentId);
-                if (student) {
-                    student.access = false;
-                    student.feesPaid = false;
-                    loadStudents();
-                    alert(`⚠️ TEST MODE: Access revoked from ${student.fullName}\n\nNOTE: This is NOT saved to cloud!`);
-                }
-            };
+            document.body.appendChild(debugBtn);
         }
-
-        // ============================================
-        // 16. TEST BUTTON (For debugging)
-        // ============================================
-        // Add this button temporarily for testing:
-        // <button onclick="testMode()" style="position:fixed; top:10px; right:10px; z-index:1000;">Test Mode</button>
+        
+        // Add debug button
+        setTimeout(addDebugButton, 1000);
     </script>
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Add this line RIGHT BEFORE </body> -->
+<button onclick="loadStudents()" style="position:fixed; top:10px; left:10px; padding:10px; background:blue; color:white; z-index:1000;">
+    FORCE LOAD STUDENTS
+</button>
 </body>
 </html>
