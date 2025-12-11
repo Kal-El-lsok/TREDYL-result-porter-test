@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pre-Nursery Admin - TREDYL SCHOOLS</title>
+    
+    <!-- FIREBASE SCRIPTS -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -72,6 +76,16 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .password-btn:hover {
+            background: #0da271;
+            transform: translateY(-2px);
+        }
+        
+        .password-btn:active {
+            transform: translateY(0);
         }
         
         /* Management Section */
@@ -184,6 +198,15 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .action-btn:active {
+            transform: translateY(0);
         }
         
         .grant-btn {
@@ -191,9 +214,17 @@
             color: white;
         }
         
+        .grant-btn:hover {
+            background: #0da271;
+        }
+        
         .revoke-btn {
             background: #ef4444;
             color: white;
+        }
+        
+        .revoke-btn:hover {
+            background: #dc2626;
         }
         
         .password-error {
@@ -211,6 +242,11 @@
             cursor: pointer;
             float: right;
             margin-top: 20px;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: #475569;
         }
         
         .search-box {
@@ -230,13 +266,47 @@
             font-weight: bold;
             color: #1e293b;
         }
-    </style>
-    
         
-    <!-- ADD THESE FIREBASE SCRIPTS -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
-    
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #f59e0b;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .connection-status {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        
+        .connection-good {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .connection-bad {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+    </style>
 </head>
 <body>
     <div class="admin-container">
@@ -268,9 +338,20 @@
         <div class="admin-content management-section" id="managementSection">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
                 <h2><i class="fas fa-users-cog"></i> PRE-NURSERY STUDENTS</h2>
-                <button class="logout-btn" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
+                <div>
+                    <span id="connectionStatus" class="connection-status connection-good">
+                        <i class="fas fa-wifi"></i> Connected
+                    </span>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Loading Spinner -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+                <p>Loading student data...</p>
             </div>
             
             <!-- Statistics -->
@@ -307,274 +388,519 @@
                 <p>1. Click <span class="status-badge status-granted">GRANT ACCESS</span> when student completes school fees</p>
                 <p>2. Click <span class="status-badge status-denied">REVOKE ACCESS</span> to remove access if needed</p>
                 <p>3. PDF files are saved as: <code>20203425.pdf</code> (roll number only)</p>
-                <p>4. Changes are saved automatically in browser storage</p>
+                <p>4. Changes save automatically to cloud database</p>
+                <p>5. Students on phones will see changes immediately</p>
             </div>
         </div>
     </div>
+
     <script>
-// =========================================
-// ============================================
-// 1. FIREBASE CONFIGURATION
-// ============================================
-===
-// 1. PASTE YOUR FIREBASE CONFIG HERE
-// ============================================
-  const firebaseConfig = {
+        // ============================================
+        // 1. FIREBASE CONFIGURATION
+        // ==============================================
+        // FIREBASE CONFIGURATION
+        // ============================================
+        // REPLACE WITH YOUR ACTUAL FIREBASE CONFIG
+       const firebaseConfig = {
     apiKey: "AIzaSyBbswCKXHCr_d_CKY3Ad2WQyflvg7bJV94",
     authDomain: "tredyl-schools.firebaseapp.com",
     projectId: "tredyl-schools",
     storageBucket: "tredyl-schools.firebasestorage.app",
     messagingSenderId: "810112149886",
     appId: "1:810112149886:web:0f915a9c6e7f2cc1cdab2f",
-  };
-
-
-// ============================================
-// 2. INITIALIZE FIREBASE
-// ============================================
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-
-// ============================================
-// ============================================
-// 3. YOUR COMPLETE STUDENT LIST
-// ============================================
-const defaultStudents = [
-    {
-        id: 1,
-        firstName: "Jacinta",
-        lastName: "John",
-        fullName: "Jacinta John",
-        rollNumber: "20203425",
-        class: "Pre-Nursery",
-        feesPaid: false,
-        access: false,
-        pdfName: "20203425.pdf"
-    },
-    {
-        id: 2,
-        firstName: "Gabriella",
-        lastName: "Uba",
-        fullName: "Gabriella Uba",
-        rollNumber: "20933225",
-        class: "Pre-Nursery",
-        feesPaid: false,
-        access: false,
-        pdfName: "20933225.pdf"
-    },
-    {
-        id: 3,
-        firstName: "Williams",
-        lastName: "Julius",
-        fullName: "Williams Julius",
-        rollNumber: "20458325",
-        class: "Pre-Nursery",
-        feesPaid: false,
-        access: false,
-        pdfName: "20458325.pdf"
-    },
-    {
-        id: 4,
-        firstName: "Nanpyal",
-        lastName: "Luke",
-        fullName: "Nanpyal Luke",
-        rollNumber: "20148325",
-        class: "Pre-Nursery",
-        feesPaid: false,
-        access: false,
-        pdfName: "20148325.pdf"
-    },
-    {
-        id: 5,
-        firstName: "King David",
-        lastName: "Francis",
-        fullName: "King David Francis",
-        rollNumber: "20670425",
-        class: "Pre-Nursery",
-        feesPaid: false,
-        access: false,
-        pdfName: "20670425.pdf"
-    },
-    {
-        id: 6,
-        firstName: "Enoch",
-        lastName: "Louis",
-        fullName: "Enoch Louis",
-        rollNumber: "20182925",
-        class: "Pre-Nursery",
-        feesPaid: false,
-        access: false,
-        pdfName: "20182925.pdf"
-    }
-];
-
-let preNurseryStudents = [];
-
-// ============================================
-// 4. LOAD FROM FIREBASE (NOT LOCALSTORAGE)
-// ============================================
-function loadFromFirebase() {
-    database.ref('students/preNursery').once('value')
-        .then(snapshot => {
-            const data = snapshot.val();
-            if (data && data.length > 0) {
-                preNurseryStudents = data;
-                console.log("Loaded from Firebase:", preNurseryStudents.length, "students");
-            } else {
-                // First time: Use default students
-                preNurseryStudents = defaultStudents;
-                saveToFirebase(); // Save to Firebase
-            }
-            loadStudents(); // Show on screen
-        })
-        .catch(error => {
-            console.error("Firebase error:", error);
-            alert("⚠️ Cannot connect to database");
-            preNurseryStudents = defaultStudents;
-            loadStudents();
-        });
-}
-
-// ============================================
-// 5. SAVE TO FIREBASE (REPLACES saveToStorage)
-// ============================================
-function saveToFirebase() {
-    database.ref('students/preNursery').set(preNurseryStudents)
-        .then(() => {
-            console.log("✅ Saved to Firebase");
-            loadStudents(); // Refresh display
-        })
-        .catch(error => {
-            console.error("Save error:", error);
-            alert("Failed to save. Check internet connection.");
-        });
-}
-
-// ============================================
-// 6. GRANT ACCESS TO STUDENT
-// ============================================
-function grantAccess(studentId) {
-    const student = preNurseryStudents.find(s => s.id === studentId);
-    if (student) {
-        student.access = true;
-        student.feesPaid = true;
-        saveToFirebase(); // THIS SAVES TO CLOUD
-        
-        alert(`✅ Access GRANTED to ${student.fullName}\n\nStudent can now view results on ANY device.\n\nPDF: ${student.pdfName}`);
-    }
-}
-
-// ============================================
-// 7. REVOKE ACCESS FROM STUDENT
-// ============================================
-function revokeAccess(studentId) {
-    const student = preNurseryStudents.find(s => s.id === studentId);
-    if (student) {
-        student.access = false;
-        student.feesPaid = false;
-        saveToFirebase(); // THIS SAVES TO CLOUD
-        
-        alert(`⚠️ Access REVOKED from ${student.fullName}\n\nStudent can no longer view results.`);
-    }
-}
-
-// ============================================
-// 8. OTHER FUNCTIONS (KEEP SAME)
-// ============================================
-function checkPassword() {
-    const password = document.getElementById('adminPassword').value;
-    const errorDiv = document.getElementById('passwordError');
-    const passwordScreen = document.getElementById('passwordScreen');
-    const managementSection = document.getElementById('managementSection');
-    
-    const correctPassword = 'KALELTHELASTSONOFKRYPTON';
-    
-    if (password === correctPassword) {
-        passwordScreen.style.display = 'none';
-        managementSection.style.display = 'block';
-        loadFromFirebase(); // CHANGED: load from Firebase
-    } else {
-        errorDiv.style.display = 'block';
-        document.getElementById('adminPassword').focus();
-    }
-}
-
-function loadStudents() {
-    const studentsGrid = document.getElementById('studentsGrid');
-    studentsGrid.innerHTML = '';
-    
-    let grantedCount = 0;
-    let deniedCount = 0;
-    
-    preNurseryStudents.forEach(student => {
-        if (student.access) grantedCount++;
-        else deniedCount++;
-        
-        const studentCard = document.createElement('div');
-        studentCard.className = `student-card ${student.access ? 'granted' : 'denied'}`;
-        
-        studentCard.innerHTML = `
-            <div class="student-name">${student.fullName}</div>
-            <div class="student-details">
-                <div><strong>Roll Number:</strong> <span class="roll-display">${student.rollNumber}</span></div>
-                <div><strong>Class:</strong> ${student.class}</div>
-                <div><strong>PDF File:</strong> <code>${student.pdfName}</code></div>
-                <div><strong>Fees:</strong> 
-                    ${student.feesPaid ? 
-                        '<span style="color: #10b981;">PAID ✓</span>' : 
-                        '<span style="color: #ef4444;">PENDING ✗</span>'}
-                </div>
-            </div>
-            
-            <div class="status-badge ${student.access ? 'status-granted' : 'status-denied'}">
-                ${student.access ? 'ACCESS GRANTED' : 'ACCESS DENIED'}
-            </div>
-            
-            <div class="action-buttons">
-                ${!student.access ? 
-                    `<button class="action-btn grant-btn" onclick="grantAccess(${student.id})">
-                        <i class="fas fa-check"></i> Grant Access
-                    </button>` : 
-                    `<button class="action-btn revoke-btn" onclick="revokeAccess(${student.id})">
-                        <i class="fas fa-ban"></i> Revoke Access
-                    </button>`}
-            </div>
-        `;
-        
-        studentsGrid.appendChild(studentCard);
-    });
-    
-    // Update statistics
-    document.getElementById('totalStudents').textContent = preNurseryStudents.length;
-    document.getElementById('accessGranted').textContent = grantedCount;
-    document.getElementById('accessDenied').textContent = deniedCount;
-}
-
-// ============================================
-// 9. INITIALIZE PAGE
-// ============================================
-window.onload = function() {
-    checkAdminURL();
-    // ADD FIREBASE SCRIPT DYNAMICALLY
-    if (typeof firebase === 'undefined') {
-        const script = document.createElement('script');
-        script.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-        script.onload = () => {
-            const script2 = document.createElement('script');
-            script2.src = 'https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js';
-            script2.onload = () => {
-                // Now initialize Firebase
-                firebase.initializeApp(firebaseConfig);
-                document.getElementById('adminPassword').focus();
-            };
-            document.head.appendChild(script2);
+    measurementId: "G-NY58XPVMD9"
         };
-        document.head.appendChild(script);
-    } else {
-        document.getElementById('adminPassword').focus();
-    }
-};
+
+        // Initialize Firebase
+        let database;
+        let preNurseryStudents = [];
+        
+        // ============================================
+        // 2. YOUR COMPLETE STUDENT DATABASE
+        // ============================================
+        const defaultStudents = [
+            {
+                id: 1,
+                firstName: "Jacinta",
+                lastName: "John",
+                fullName: "Jacinta John",
+                rollNumber: "20203425",
+                class: "Pre-Nursery",
+                feesPaid: false,
+                access: false,
+                pdfName: "20203425.pdf"
+            },
+            {
+                id: 2,
+                firstName: "Gabriella",
+                lastName: "Uba",
+                fullName: "Gabriella Uba",
+                rollNumber: "20933225",
+                class: "Pre-Nursery",
+                feesPaid: false,
+                access: false,
+                pdfName: "20933225.pdf"
+            },
+            {
+                id: 3,
+                firstName: "Williams",
+                lastName: "Julius",
+                fullName: "Williams Julius",
+                rollNumber: "20458325",
+                class: "Pre-Nursery",
+                feesPaid: false,
+                access: false,
+                pdfName: "20458325.pdf"
+            },
+            {
+                id: 4,
+                firstName: "Nanpyal",
+                lastName: "Luke",
+                fullName: "Nanpyal Luke",
+                rollNumber: "20148325",
+                class: "Pre-Nursery",
+                feesPaid: false,
+                access: false,
+                pdfName: "20148325.pdf"
+            },
+            {
+                id: 5,
+                firstName: "King David",
+                lastName: "Francis",
+                fullName: "King David Francis",
+                rollNumber: "20670425",
+                class: "Pre-Nursery",
+                feesPaid: false,
+                access: false,
+                pdfName: "20670425.pdf"
+            },
+            {
+                id: 6,
+                firstName: "Enoch",
+                lastName: "Louis",
+                fullName: "Enoch Louis",
+                rollNumber: "20182925",
+                class: "Pre-Nursery",
+                feesPaid: false,
+                access: false,
+                pdfName: "20182925.pdf"
+            }
+        ];
+
+        // ============================================
+        // 3. INITIALIZE FIREBASE
+        // ============================================
+        function initializeFirebase() {
+            try {
+                console.log("Initializing Firebase...");
+                firebase.initializeApp(firebaseConfig);
+                database = firebase.database();
+                console.log("✅ Firebase initialized successfully");
+                updateConnectionStatus(true);
+                return true;
+            } catch (error) {
+                console.error("❌ Firebase initialization error:", error);
+                updateConnectionStatus(false);
+                return false;
+            }
+        }
+
+        // ============================================
+        // 4. LOAD STUDENTS FROM FIREBASE
+        // ============================================
+        async function loadFromFirebase() {
+            console.log("Loading students from Firebase...");
+            
+            // Show loading spinner
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('studentsGrid').innerHTML = '';
+            
+            try {
+                // Get data from Firebase
+                const snapshot = await database.ref('students/preNursery').once('value');
+                const data = snapshot.val();
+                
+                if (data && data.length > 0) {
+                    preNurseryStudents = data;
+                    console.log("✅ Loaded from Firebase:", preNurseryStudents.length, "students");
+                } else {
+                    // First time: Use default students
+                    console.log("No data in Firebase, using default students");
+                    preNurseryStudents = JSON.parse(JSON.stringify(defaultStudents));
+                    
+                    // Save default data to Firebase
+                    await saveToFirebase();
+                }
+                
+                // Update display
+                loadStudents();
+                updateConnectionStatus(true);
+                
+            } catch (error) {
+                console.error("❌ Firebase load error:", error);
+                
+                // Fallback: Use local data
+                alert("⚠️ Cannot connect to database. Using local data.");
+                preNurseryStudents = JSON.parse(JSON.stringify(defaultStudents));
+                loadStudents();
+                updateConnectionStatus(false);
+                
+            } finally {
+                // Hide loading spinner
+                document.getElementById('loadingSpinner').style.display = 'none';
+            }
+        }
+
+        // ============================================
+        // 5. SAVE STUDENTS TO FIREBASE
+        // ============================================
+        async function saveToFirebase() {
+            console.log("Saving to Firebase...");
+            
+            try {
+                await database.ref('students/preNursery').set(preNurseryStudents);
+                console.log("✅ Saved to Firebase");
+                updateConnectionStatus(true);
+                return true;
+            } catch (error) {
+                console.error("❌ Save error:", error);
+                alert("Failed to save changes. Check internet connection.");
+                updateConnectionStatus(false);
+                return false;
+            }
+        }
+
+        // ============================================
+        // 6. GRANT ACCESS TO STUDENT
+        // ============================================
+        async function grantAccess(studentId) {
+            const student = preNurseryStudents.find(s => s.id === studentId);
+            if (!student) {
+                alert("Student not found!");
+                return;
+            }
+            
+            console.log("Granting access to:", student.fullName);
+            
+            // Update student data
+            student.access = true;
+            student.feesPaid = true;
+            
+            // Save to Firebase
+            const success = await saveToFirebase();
+            
+            if (success) {
+                // Update display
+                loadStudents();
+                
+                // Show success message
+                alert(`✅ Access GRANTED to ${student.fullName}\n\nStudent can now view results on ANY device.\n\nPDF: ${student.pdfName}`);
+            }
+        }
+
+        // ============================================
+        // 7. REVOKE ACCESS FROM STUDENT
+        // ============================================
+        async function revokeAccess(studentId) {
+            const student = preNurseryStudents.find(s => s.id === studentId);
+            if (!student) {
+                alert("Student not found!");
+                return;
+            }
+            
+            console.log("Revoking access from:", student.fullName);
+            
+            // Update student data
+            student.access = false;
+            student.feesPaid = false;
+            
+            // Save to Firebase
+            const success = await saveToFirebase();
+            
+            if (success) {
+                // Update display
+                loadStudents();
+                
+                // Show success message
+                alert(`⚠️ Access REVOKED from ${student.fullName}\n\nStudent can no longer view results.`);
+            }
+        }
+
+        // ============================================
+        // 8. LOAD STUDENTS TO DISPLAY
+        // ============================================
+        function loadStudents() {
+            const studentsGrid = document.getElementById('studentsGrid');
+            studentsGrid.innerHTML = '';
+            
+            let grantedCount = 0;
+            let deniedCount = 0;
+            
+            // Sort students by name
+            const sortedStudents = [...preNurseryStudents].sort((a, b) => 
+                a.fullName.localeCompare(b.fullName)
+            );
+            
+            sortedStudents.forEach(student => {
+                // Count access status
+                if (student.access) {
+                    grantedCount++;
+                } else {
+                    deniedCount++;
+                }
+                
+                // Create student card
+                const studentCard = document.createElement('div');
+                studentCard.className = `student-card ${student.access ? 'granted' : 'denied'}`;
+                
+                studentCard.innerHTML = `
+                    <div class="student-name">${student.fullName}</div>
+                    <div class="student-details">
+                        <div><strong>Roll Number:</strong> <span class="roll-display">${student.rollNumber}</span></div>
+                        <div><strong>Class:</strong> ${student.class}</div>
+                        <div><strong>PDF File:</strong> <code>${student.pdfName}</code></div>
+                        <div><strong>Fees:</strong> 
+                            ${student.feesPaid ? 
+                                '<span style="color: #10b981;">PAID ✓</span>' : 
+                                '<span style="color: #ef4444;">PENDING ✗</span>'}
+                        </div>
+                    </div>
+                    
+                    <div class="status-badge ${student.access ? 'status-granted' : 'status-denied'}">
+                        ${student.access ? 'ACCESS GRANTED' : 'ACCESS DENIED'}
+                    </div>
+                    
+                    <div class="action-buttons">
+                        ${!student.access ? 
+                            `<button class="action-btn grant-btn" onclick="grantAccess(${student.id})">
+                                <i class="fas fa-check"></i> Grant Access
+                            </button>` : 
+                            `<button class="action-btn revoke-btn" onclick="revokeAccess(${student.id})">
+                                <i class="fas fa-ban"></i> Revoke Access
+                            </button>`}
+                    </div>
+                `;
+                
+                studentsGrid.appendChild(studentCard);
+            });
+            
+            // Update statistics
+            document.getElementById('totalStudents').textContent = preNurseryStudents.length;
+            document.getElementById('accessGranted').textContent = grantedCount;
+            document.getElementById('accessDenied').textContent = deniedCount;
+            
+            console.log("Students loaded:", preNurseryStudents.length);
+        }
+
+        // ============================================
+        // 9. SEARCH STUDENTS
+        // ============================================
+        function searchStudents() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const filteredStudents = preNurseryStudents.filter(student => 
+                student.fullName.toLowerCase().includes(searchTerm) || 
+                student.rollNumber.includes(searchTerm) ||
+                student.firstName.toLowerCase().includes(searchTerm) ||
+                student.lastName.toLowerCase().includes(searchTerm)
+            );
+            
+            const studentsGrid = document.getElementById('studentsGrid');
+            studentsGrid.innerHTML = '';
+            
+            let grantedCount = 0;
+            let deniedCount = 0;
+            
+            filteredStudents.forEach(student => {
+                if (student.access) grantedCount++;
+                else deniedCount++;
+                
+                const studentCard = document.createElement('div');
+                studentCard.className = `student-card ${student.access ? 'granted' : 'denied'}`;
+                
+                studentCard.innerHTML = `
+                    <div class="student-name">${student.fullName}</div>
+                    <div class="student-details">
+                        <div><strong>Roll Number:</strong> <span class="roll-display">${student.rollNumber}</span></div>
+                        <div><strong>Class:</strong> ${student.class}</div>
+                        <div><strong>PDF File:</strong> <code>${student.pdfName}</code></div>
+                        <div><strong>Fees:</strong> 
+                            ${student.feesPaid ? 
+                                '<span style="color: #10b981;">PAID ✓</span>' : 
+                                '<span style="color: #ef4444;">PENDING ✗</span>'}
+                        </div>
+                    </div>
+                    
+                    <div class="status-badge ${student.access ? 'status-granted' : 'status-denied'}">
+                        ${student.access ? 'ACCESS GRANTED' : 'ACCESS DENIED'}
+                    </div>
+                    
+                    <div class="action-buttons">
+                        ${!student.access ? 
+                            `<button class="action-btn grant-btn" onclick="grantAccess(${student.id})">
+                                <i class="fas fa-check"></i> Grant Access
+                            </button>` : 
+                            `<button class="action-btn revoke-btn" onclick="revokeAccess(${student.id})">
+                                <i class="fas fa-ban"></i> Revoke Access
+                            </button>`}
+                    </div>
+                `;
+                
+                studentsGrid.appendChild(studentCard);
+            });
+            
+            // Update statistics for filtered results
+            document.getElementById('totalStudents').textContent = filteredStudents.length;
+            document.getElementById('accessGranted').textContent = grantedCount;
+            document.getElementById('accessDenied').textContent = deniedCount;
+        }
+
+        // ============================================
+        // 10. PASSWORD CHECK
+        // ============================================
+        function checkPassword() {
+            const password = document.getElementById('adminPassword').value;
+            const errorDiv = document.getElementById('passwordError');
+            const passwordScreen = document.getElementById('passwordScreen');
+            const managementSection = document.getElementById('managementSection');
+            
+            // Correct password
+            const correctPassword = 'KALELTHELASTSONOFKRYPTON';
+            
+            if (password === correctPassword) {
+                // Hide password screen, show management
+                passwordScreen.style.display = 'none';
+                managementSection.style.display = 'block';
+                
+                // Initialize Firebase and load data
+                if (initializeFirebase()) {
+                    loadFromFirebase();
+                }
+            } else {
+                errorDiv.style.display = 'block';
+                document.getElementById('adminPassword').focus();
+                document.getElementById('adminPassword').value = '';
+            }
+        }
+
+        // ============================================
+        // 11. UPDATE CONNECTION STATUS
+        // ============================================
+        function updateConnectionStatus(connected) {
+            const statusElement = document.getElementById('connectionStatus');
+            
+            if (connected) {
+                statusElement.className = 'connection-status connection-good';
+                statusElement.innerHTML = '<i class="fas fa-wifi"></i> Connected';
+            } else {
+                statusElement.className = 'connection-status connection-bad';
+                statusElement.innerHTML = '<i class="fas fa-wifi-slash"></i> Offline';
+            }
+        }
+
+        // ============================================
+        // 12. LOGOUT
+        // ============================================
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear password field
+                document.getElementById('adminPassword').value = '';
+                
+                // Show password screen, hide management
+                document.getElementById('passwordScreen').style.display = 'block';
+                document.getElementById('managementSection').style.display = 'none';
+                document.getElementById('passwordError').style.display = 'none';
+                
+                // Focus on password input
+                document.getElementById('adminPassword').focus();
+            }
+        }
+
+        // ============================================
+        // 13. CHECK ADMIN URL PARAMETER
+        // ============================================
+        function checkAdminURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const adminParam = urlParams.get('admin');
+            
+            if (adminParam !== '1') {
+                // Redirect to home if no admin parameter
+                window.location.href = 'select class.html';
+            }
+        }
+
+        // ============================================
+        // 14. INITIALIZE PAGE
+        // ============================================
+        window.onload = function() {
+            console.log("Admin page loading...");
+            
+            // Check admin URL
+            checkAdminURL();
+            
+            // Focus on password input
+            document.getElementById('adminPassword').focus();
+            
+            // Press Enter to submit password
+            document.getElementById('adminPassword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkPassword();
+                }
+            });
+            
+            // Test Firebase initialization
+            initializeFirebase();
+            
+            console.log("✅ Admin page ready. Enter password: KALELTHELASTSONOFKRYPTON");
+        };
+
+        // ============================================
+        // 15. EMERGENCY TEST MODE
+        // ============================================
+        // If Firebase fails, use this test mode
+        function testMode() {
+            console.log("Entering test mode...");
+            
+            preNurseryStudents = JSON.parse(JSON.stringify(defaultStudents));
+            loadStudents();
+            
+            alert("⚠️ Using TEST MODE (No Firebase)\n\nChanges will NOT save to cloud.\nStudents on phones won't see changes.");
+            
+            // Override save function for test mode
+            window.saveToFirebase = async function() {
+                console.log("Test mode: Simulating save");
+                loadStudents();
+                return true;
+            };
+            
+            // Override grant/revoke functions
+            window.grantAccess = function(studentId) {
+                const student = preNurseryStudents.find(s => s.id === studentId);
+                if (student) {
+                    student.access = true;
+                    student.feesPaid = true;
+                    loadStudents();
+                    alert(`✅ TEST MODE: Access granted to ${student.fullName}\n\nNOTE: This is NOT saved to cloud!`);
+                }
+            };
+            
+            window.revokeAccess = function(studentId) {
+                const student = preNurseryStudents.find(s => s.id === studentId);
+                if (student) {
+                    student.access = false;
+                    student.feesPaid = false;
+                    loadStudents();
+                    alert(`⚠️ TEST MODE: Access revoked from ${student.fullName}\n\nNOTE: This is NOT saved to cloud!`);
+                }
+            };
+        }
+
+        // ============================================
+        // 16. TEST BUTTON (For debugging)
+        // ============================================
+        // Add this button temporarily for testing:
+        // <button onclick="testMode()" style="position:fixed; top:10px; right:10px; z-index:1000;">Test Mode</button>
     </script>
+    
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </body>
