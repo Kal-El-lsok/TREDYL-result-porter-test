@@ -3,48 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pre-Nursery Admin - TREDYL SCHOOLS</title>
+    <title>Pre-Nursery Results - TREDYL SCHOOLS</title>
+    <link rel="stylesheet" href="select class.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- FIREBASE SDK v9 (NOT v12) -->
+    <!-- FIREBASE SDK v9 (SAME AS ADMIN) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: #0f172a; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .admin-container { background: white; border-radius: 15px; width: 100%; max-width: 900px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .admin-header { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 25px; text-align: center; }
-        .admin-content { padding: 30px; }
-        .password-screen { text-align: center; padding: 40px 20px; }
-        .password-input { width: 300px; padding: 15px; margin: 20px auto; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; display: block; }
-        .password-btn { background: #10b981; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
-        .password-error { color: #ef4444; margin-top: 10px; display: none; }
-        .management-section { display: none; }
-        .stats-box { background: #f8fafc; border-radius: 10px; padding: 20px; margin-bottom: 25px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .stat-item { text-align: center; }
-        .stat-number { font-size: 2rem; font-weight: 700; color: #d97706; }
-        .stat-label { color: #64748b; font-size: 0.9rem; }
-        .students-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
-        .student-card { background: white; border: 2px solid #e2e8f0; border-radius: 12px; padding: 20px; }
-        .student-card.granted { border-color: #10b981; background: #f0fdf4; }
-        .student-card.denied { border-color: #fca5a5; background: #fef2f2; }
-        .student-name { font-size: 1.2rem; font-weight: 600; color: #1e293b; margin-bottom: 5px; }
-        .student-details { color: #64748b; font-size: 0.9rem; margin-bottom: 15px; }
-        .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-top: 10px; }
-        .status-granted { background: #d1fae5; color: #065f46; }
-        .status-denied { background: #fee2e2; color: #dc2626; }
-        .action-buttons { margin-top: 15px; display: flex; gap: 10px; }
-        .action-btn { flex: 1; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
-        .grant-btn { background: #10b981; color: white; }
-        .revoke-btn { background: #ef4444; color: white; }
-        .logout-btn { background: #64748b; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; float: right; margin-top: 20px; }
-        .search-box { margin-bottom: 20px; }
-        .search-input { width: 100%; padding: 12px 15px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; }
-        .roll-display { font-family: 'Courier New', monospace; font-weight: bold; color: #1e293b; }
+        .prenursery-container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+        .prenursery-form { background: white; border-radius: 15px; padding: 2.5rem; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.1); text-align: center; border-top: 5px solid #f59e0b; }
+        .prenursery-icon { font-size: 3.5rem; color: #f59e0b; margin-bottom: 1rem; }
+        .prenursery-title { color: #d97706; margin-bottom: 0.5rem; }
+        .roll-input-prenursery { width: 100%; padding: 15px; margin: 1.5rem 0; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1.1rem; text-align: center; font-family: 'Courier New', monospace; font-weight: bold; }
+        .check-btn-prenursery { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; padding: 15px 40px; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; }
+        .error-box-prenursery { background: #fee2e2; color: #dc2626; padding: 1rem; border-radius: 8px; margin-top: 1rem; display: none; align-items: center; justify-content: center; gap: 10px; }
+        .access-denied-box { background: #fef3c7; color: #92400e; padding: 1.5rem; border-radius: 10px; margin-top: 1rem; display: none; text-align: center; border-left: 4px solid #f59e0b; }
+        .results-box-prenursery { background: white; border-radius: 15px; padding: 2.5rem; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.1); margin-top: 2rem; display: none; border-top: 5px solid #10b981; }
+        .student-header-prenursery { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; text-align: center; }
+        .action-buttons-prenursery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
+        .action-btn-prenursery { padding: 1.5rem 1rem; border: none; border-radius: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.8rem; font-weight: 600; }
+        .roll-display-result { font-family: 'Courier New', monospace; font-size: 1.2rem; font-weight: bold; }
     </style>
     
     <script>
-        // FIREBASE CONFIG
+        // FIREBASE CONFIG (SAME AS ADMIN)
         const firebaseConfig = {
             apiKey: "AIzaSyBbswCKXHCr_d_CKY3Ad2WQyflvg7bJV94",
             authDomain: "tredyl-schools.firebaseapp.com",
@@ -60,220 +44,241 @@
         try {
             const app = firebase.initializeApp(firebaseConfig);
             database = firebase.database();
-            console.log("✅ Admin: Firebase ready");
+            console.log("✅ Student: Firebase ready");
         } catch (error) {
-            console.error("Admin Firebase error:", error);
+            console.error("Student Firebase error:", error);
         }
     </script>
 </head>
 <body>
-    <div class="admin-container">
-        <div class="admin-header">
-            <h1>PRE-NURSERY ADMIN PORTAL</h1>
-            <p>Student Result Access Management</p>
-        </div>
-        
-        <div class="admin-content" id="passwordScreen">
-            <div class="password-screen">
-                <h2>ADMIN AUTHENTICATION</h2>
-                <p>Enter admin password to continue</p>
-                <input type="password" id="adminPassword" class="password-input" placeholder="Enter admin password" autofocus>
-                <button class="password-btn" onclick="checkPassword()">ACCESS ADMIN PORTAL</button>
-                <div class="password-error" id="passwordError">Incorrect password</div>
+    <section class="header">
+        <nav>
+            <a href="index.html" class="logo"><img src="logo-removebg-preview.png" alt="TREDYL Schools Logo"></a>
+            <div class="nav-links" id="navLinks">
+                <i class="fa fa-times" onclick="hideMenu()"></i>
+                <ul>
+                    <li><a href="index.html">PORTAL HOME</a></li>
+                    <li><a href="print result.html">PRINT RESULT</a></li>
+                    <li><a href="print news.html">NEWSLETTER</a></li>
+                </ul>
+            </div>
+            <i class="fa fa-bars" onclick="showMenu()"></i>
+        </nav>
+
+        <div class="prenursery-container">
+            <div class="back-nav">
+                <a href="select class.html" class="back-btn"><i class="fas fa-arrow-left"></i> BACK TO CLASS SELECTION</a>
+            </div>
+
+            <div class="prenursery-form">
+                <div class="prenursery-icon"><i class="fas fa-baby"></i></div>
+                <h1 class="prenursery-title">PRE-NURSERY RESULTS</h1>
+                <p>First Term 2025/2026 Academic Session</p>
+                
+                <input type="text" id="rollNumber" class="roll-input-prenursery" placeholder="Enter 8-digit roll number" autofocus maxlength="8">
+                
+                <button class="check-btn-prenursery" id="checkBtn"><i class="fas fa-search"></i> CHECK RESULT</button>
+                
+                <div class="error-box-prenursery" id="errorBox">
+                    <i class="fas fa-exclamation-circle"></i><span id="errorText">Invalid roll number</span>
+                </div>
+                
+                <div class="access-denied-box" id="accessDeniedBox">
+                    <i class="fas fa-lock"></i>
+                    <h3 style="margin-bottom: 10px;">RESULT NOT AVAILABLE</h3>
+                    <p>Your result is currently not available. Please complete your school fees to access your result.</p>
+                    <p style="margin-top: 10px; font-weight: 500;"><i class="fas fa-phone"></i> Contact School: +234 802 833 2430</p>
+                </div>
+            </div>
+
+            <div class="results-box-prenursery" id="resultsBox">
+                <div class="student-header-prenursery">
+                    <h2 id="studentName" style="font-size: 1.8rem; margin-bottom: 10px;">STUDENT NAME</h2>
+                    <p style="opacity: 0.9; margin-bottom: 5px;">
+                        <i class="fas fa-id-card"></i> Roll Number: <strong class="roll-display-result" id="displayRoll">20203425</strong>
+                    </p>
+                    <p style="opacity: 0.9;"><i class="fas fa-school"></i> Class: <strong>Pre-Nursery</strong></p>
+                </div>
+                
+                <p style="text-align: center; font-size: 1.1rem; color: #475569; margin-bottom: 1rem;">Your First Term result is ready. Choose an option below:</p>
+                
+                <div class="action-buttons-prenursery">
+                    <button class="action-btn-prenursery print-btn-prenursery" id="printBtn"><i class="fas fa-print"></i><span>PRINT RESULT</span></button>
+                    <button class="action-btn-prenursery download-btn-prenursery" id="downloadBtn"><i class="fas fa-download"></i><span>DOWNLOAD PDF</span></button>
+                    <button class="action-btn-prenursery share-btn-prenursery" id="shareBtn"><i class="fas fa-share-alt"></i><span>SHARE RESULT</span></button>
+                </div>
+                
+                <div class="instructions-box" style="margin-top: 1.5rem;">
+                    <p><i class="fas fa-lightbulb"></i> <strong>Note:</strong> PDF will be downloaded as <code id="pdfFileName">20203425.pdf</code></p>
+                </div>
             </div>
         </div>
-        
-        <div class="admin-content management-section" id="managementSection">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h2>PRE-NURSERY STUDENTS</h2>
-                <button class="logout-btn" onclick="logout()">Logout</button>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="index.html" class="footer-link"><i class="fas fa-home"></i><span>PORTAL HOME</span></a>
+                    <a href="print result.html" class="footer-link"><i class="fas fa-print"></i><span>PRINT RESULT</span></a>
+                    <a href="print news.html" class="footer-link"><i class="fas fa-newspaper"></i><span>NEWSLETTER</span></a>
+                    <a href="https://kal-el-lsok.github.io/KAL-EL-PORTFOLIO/" class="footer-link"><i class="fas fa-code"></i><span>DEVELOPER</span></a>
+                </div>
+
+                <div class="footer-info">
+                    <div class="school-info">
+                        <img src="logo-removebg-preview.png" class="footer-logo" alt="TREDYL Logo">
+                        <p>TREDYL International Schools Results Portal<br>First Term Examination Results 2025/2026</p>
+                    </div>
+
+                    <div class="support-info">
+                        <h4><i class="fas fa-headset"></i> PRE-NURSERY SUPPORT</h4>
+                        <p>For Pre-Nursery result inquiries:</p>
+                        <p><i class="fas fa-envelope"></i> prenursery@tredylschools.edu.ng</p>
+                        <p><i class="fas fa-phone"></i> +234 802 833 2430</p>
+                        <p><i class="fas fa-clock"></i> 8:00 AM - 4:00 PM (Weekdays)</p>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p class="copyright">&copy; 2025 Tredyl International School - First Term Results Portal. All rights reserved.<br>Developed with <i class="fas fa-heart"></i> by KAL-EL</p>
+                </div>
             </div>
-            
-            <div class="stats-box">
-                <div class="stat-item"><div class="stat-number" id="totalStudents">6</div><div class="stat-label">Total Students</div></div>
-                <div class="stat-item"><div class="stat-number" id="accessGranted">0</div><div class="stat-label">Access Granted</div></div>
-                <div class="stat-item"><div class="stat-number" id="accessDenied">6</div><div class="stat-label">Access Denied</div></div>
-            </div>
-            
-            <div class="search-box">
-                <input type="text" id="searchInput" class="search-input" placeholder="Search students..." onkeyup="searchStudents()">
-            </div>
-            
-            <div class="students-grid" id="studentsGrid">
-                <!-- Students loaded here -->
-            </div>
-        </div>
-    </div>
+        </footer>
+    </section>
 
     <script>
-        // STUDENT DATA
-        let students = [
-            { id: 1, fullName: "Jacinta John", rollNumber: "20203425", access: false, pdfName: "20203425.pdf", class: "Pre-Nursery", feesPaid: false },
-            { id: 2, fullName: "Gabriella Uba", rollNumber: "20933225", access: false, pdfName: "20933225.pdf", class: "Pre-Nursery", feesPaid: false },
-            { id: 3, fullName: "Williams Julius", rollNumber: "20458325", access: false, pdfName: "20458325.pdf", class: "Pre-Nursery", feesPaid: false },
-            { id: 4, fullName: "Nanpyal Luke", rollNumber: "20148325", access: false, pdfName: "20148325.pdf", class: "Pre-Nursery", feesPaid: false },
-            { id: 5, fullName: "King David Francis", rollNumber: "20670425", access: false, pdfName: "20670425.pdf", class: "Pre-Nursery", feesPaid: false },
-            { id: 6, fullName: "Enoch Louis", rollNumber: "20182925", access: false, pdfName: "20182925.pdf", class: "Pre-Nursery", feesPaid: false }
-        ];
+        // MOBILE MENU
+        function showMenu() { document.getElementById("navLinks").classList.add("active"); }
+        function hideMenu() { document.getElementById("navLinks").classList.remove("active"); }
 
-        // CHECK PASSWORD
-        function checkPassword() {
-            console.log("Login clicked");
-            const password = document.getElementById('adminPassword').value;
-            if (password === 'KALELTHELASTSONOFKRYPTON') {
-                document.getElementById('passwordScreen').style.display = 'none';
-                document.getElementById('managementSection').style.display = 'block';
-                loadStudentsFromFirebase();
-            } else {
-                document.getElementById('passwordError').style.display = 'block';
+        // CHECK RESULT
+        async function checkResult() {
+            console.log("Check result clicked");
+            const rollNumber = document.getElementById('rollNumber').value.trim();
+            const errorBox = document.getElementById('errorBox');
+            const accessDeniedBox = document.getElementById('accessDeniedBox');
+            const resultsBox = document.getElementById('resultsBox');
+            
+            errorBox.style.display = 'none';
+            accessDeniedBox.style.display = 'none';
+            resultsBox.style.display = 'none';
+            
+            if (!rollNumber || rollNumber.length !== 8 || !/^\d+$/.test(rollNumber)) {
+                document.getElementById('errorText').textContent = 'Enter valid 8-digit roll number';
+                errorBox.style.display = 'flex';
+                return;
             }
-        }
-
-        // LOAD FROM FIREBASE
-        async function loadStudentsFromFirebase() {
-            console.log("Loading from Firebase...");
+            
             try {
                 if (!database) {
-                    console.error("No database connection");
-                    displayStudents();
+                    document.getElementById('errorText').textContent = 'System error. Refresh page.';
+                    errorBox.style.display = 'flex';
                     return;
                 }
                 
                 const snapshot = await database.ref('students/preNursery').once('value');
-                if (snapshot.exists()) {
-                    students = snapshot.val();
-                    console.log("Loaded from Firebase:", students);
+                const students = snapshot.val();
+                
+                if (!students) {
+                    document.getElementById('errorText').textContent = 'No student data found';
+                    errorBox.style.display = 'flex';
+                    return;
                 }
-                displayStudents();
+                
+                const student = students.find(s => s.rollNumber === rollNumber);
+                
+                if (student) {
+                    if (student.access) {
+                        document.getElementById('studentName').textContent = student.fullName;
+                        document.getElementById('displayRoll').textContent = rollNumber;
+                        document.getElementById('pdfFileName').textContent = student.pdfName;
+                        resultsBox.style.display = 'block';
+                        console.log("✅ Access granted for:", student.fullName);
+                    } else {
+                        accessDeniedBox.style.display = 'block';
+                        console.log("❌ Access denied for:", student.fullName);
+                    }
+                } else {
+                    document.getElementById('errorText').textContent = 'Roll number not found';
+                    errorBox.style.display = 'flex';
+                }
             } catch (error) {
-                console.log("Firebase error, using local:", error);
-                displayStudents();
+                console.error("Check result error:", error);
+                document.getElementById('errorText').textContent = 'Network error. Try again.';
+                errorBox.style.display = 'flex';
             }
         }
 
-        // SAVE TO FIREBASE
-        async function saveToFirebase() {
-            console.log("Saving to Firebase...");
-            try {
-                await database.ref('students/preNursery').set(students);
-                console.log("✅ Saved to Firebase");
-                return true;
-            } catch (error) {
-                console.log("Save error:", error);
-                alert("Save failed: " + error.message);
-                return false;
+        // PRINT RESULT
+        function printResult() {
+            const studentName = document.getElementById('studentName').textContent;
+            const rollNumber = document.getElementById('displayRoll').textContent;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html><head><title>${studentName} - Result</title>
+                <style>body{font-family:Arial; margin:40px;}</style>
+                </head><body>
+                    <h1 style="color:#d97706;">TREDYL SCHOOLS</h1>
+                    <h2>PRE-NURSERY RESULT</h2>
+                    <p><strong>Student:</strong> ${studentName}</p>
+                    <p><strong>Roll:</strong> ${rollNumber}</p>
+                    <p><strong>Term:</strong> First Term 2025/2026</p>
+                    <script>window.print(); setTimeout(()=>window.close(),1000);</script>
+                </body></html>
+            `);
+            printWindow.document.close();
+        }
+
+        // DOWNLOAD PDF
+        function downloadPDF() {
+            const rollNumber = document.getElementById('displayRoll').textContent;
+            const studentName = document.getElementById('studentName').textContent;
+            const pdfName = `${rollNumber}.pdf`;
+            
+            const link = document.createElement('a');
+            link.href = `results/prenursery/${pdfName}`;
+            link.download = pdfName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            alert(`Downloading: ${pdfName}\nStudent: ${studentName}`);
+        }
+
+        // SHARE RESULT
+        function shareResult() {
+            const studentName = document.getElementById('studentName').textContent;
+            const rollNumber = document.getElementById('displayRoll').textContent;
+            const shareText = `TREDYL Schools - Pre-Nursery Result\nStudent: ${studentName}\nRoll: ${rollNumber}\nTerm: First Term 2025/2026`;
+            
+            if (navigator.share) {
+                navigator.share({ title: 'My Pre-Nursery Result', text: shareText });
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('✅ Result copied to clipboard!');
+                });
             }
         }
 
-        // DISPLAY STUDENTS
-        function displayStudents() {
-            console.log("Displaying students");
-            const grid = document.getElementById('studentsGrid');
-            grid.innerHTML = '';
-            
-            let granted = 0, denied = 0;
-            
-            students.forEach(student => {
-                if (student.access) granted++; else denied++;
-                
-                const card = document.createElement('div');
-                card.className = `student-card ${student.access ? 'granted' : 'denied'}`;
-                card.innerHTML = `
-                    <div class="student-name">${student.fullName}</div>
-                    <div class="student-details">
-                        <div><strong>Roll:</strong> <span class="roll-display">${student.rollNumber}</span></div>
-                        <div><strong>PDF:</strong> <code>${student.pdfName}</code></div>
-                        <div><strong>Fees:</strong> ${student.feesPaid ? 'PAID ✓' : 'PENDING ✗'}</div>
-                    </div>
-                    <div class="status-badge ${student.access ? 'status-granted' : 'status-denied'}">
-                        ${student.access ? 'ACCESS GRANTED' : 'ACCESS DENIED'}
-                    </div>
-                    <div class="action-buttons">
-                        ${!student.access ? 
-                            `<button class="action-btn grant-btn" onclick="grantAccess(${student.id})">Grant Access</button>` : 
-                            `<button class="action-btn revoke-btn" onclick="revokeAccess(${student.id})">Revoke Access</button>`}
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-            
-            document.getElementById('totalStudents').textContent = students.length;
-            document.getElementById('accessGranted').textContent = granted;
-            document.getElementById('accessDenied').textContent = denied;
-        }
-
-        // GRANT ACCESS
-        async function grantAccess(studentId) {
-            console.log("Granting access to:", studentId);
-            const student = students.find(s => s.id === studentId);
-            if (student) {
-                student.access = true;
-                student.feesPaid = true;
-                
-                const saved = await saveToFirebase();
-                if (saved) {
-                    displayStudents();
-                    alert(`✅ Access GRANTED to ${student.fullName}`);
-                }
-            }
-        }
-
-        // REVOKE ACCESS
-        async function revokeAccess(studentId) {
-            console.log("Revoking access from:", studentId);
-            const student = students.find(s => s.id === studentId);
-            if (student) {
-                student.access = false;
-                student.feesPaid = false;
-                
-                const saved = await saveToFirebase();
-                if (saved) {
-                    displayStudents();
-                    alert(`⚠️ Access REVOKED from ${student.fullName}`);
-                }
-            }
-        }
-
-        // SEARCH
-        function searchStudents() {
-            const term = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = students.filter(s => s.fullName.toLowerCase().includes(term) || s.rollNumber.includes(term));
-            
-            const grid = document.getElementById('studentsGrid');
-            grid.innerHTML = '';
-            
-            filtered.forEach(student => {
-                grid.innerHTML += `
-                <div class="student-card ${student.access ? 'granted' : 'denied'}">
-                    <div class="student-name">${student.fullName}</div>
-                    <div class="student-details">
-                        <div><strong>Roll:</strong> <span class="roll-display">${student.rollNumber}</span></div>
-                        <div><strong>PDF:</strong> <code>${student.pdfName}</code></div>
-                    </div>
-                    <div class="action-buttons">
-                        ${!student.access ? 
-                            `<button class="action-btn grant-btn" onclick="grantAccess(${student.id})">Grant Access</button>` : 
-                            `<button class="action-btn revoke-btn" onclick="revokeAccess(${student.id})">Revoke Access</button>`}
-                    </div>
-                </div>`;
-            });
-        }
-
-        // LOGOUT
-        function logout() {
-            if (confirm('Logout?')) {
-                document.getElementById('passwordScreen').style.display = 'block';
-                document.getElementById('managementSection').style.display = 'none';
-                document.getElementById('adminPassword').value = '';
-                document.getElementById('passwordError').style.display = 'none';
-            }
-        }
-
-        // INIT
+        // INITIALIZE
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("Admin page loaded");
-            document.getElementById('adminPassword').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') checkPassword();
+            console.log("Student page loaded");
+            
+            document.getElementById('checkBtn').addEventListener('click', checkResult);
+            document.getElementById('printBtn').addEventListener('click', printResult);
+            document.getElementById('downloadBtn').addEventListener('click', downloadPDF);
+            document.getElementById('shareBtn').addEventListener('click', shareResult);
+            
+            document.getElementById('rollNumber').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkResult();
+            });
+            
+            document.getElementById('rollNumber').addEventListener('input', function() {
+                this.value = this.value.replace(/\D/g, '').slice(0, 8);
+            });
+            
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => hideMenu());
             });
         });
     </script>
