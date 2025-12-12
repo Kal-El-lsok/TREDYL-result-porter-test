@@ -160,30 +160,7 @@
         .share-btn { background: #dbeafe; color: #1e40af; }
         
         .student-list {
-            background: #f8fafc;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 30px;
-        }
-        
-        .student-list h3 {
-            color: #475569;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        
-        .student-list ul {
-            list-style: none;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-        }
-        
-        .student-list li {
-            background: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            border-left: 4px solid #f59e0b;
+            display: none; /* Hidden as requested */
         }
         
         .footer {
@@ -204,10 +181,6 @@
             }
             
             .action-buttons {
-                grid-template-columns: 1fr;
-            }
-            
-            .student-list ul {
                 grid-template-columns: 1fr;
             }
         }
@@ -233,7 +206,7 @@
             <p style="color: #64748b; margin-bottom: 20px;">Enter your roll number to view your result</p>
             
             <input type="text" id="rollNumber" class="input-field" 
-                   placeholder="Enter 8-digit roll number (e.g., 20203425)" 
+                   placeholder="Enter 8-digit roll number" 
                    maxlength="8" autofocus>
             
             <button class="check-btn" id="checkBtn">
@@ -249,20 +222,16 @@
         <!-- Results -->
         <div class="results-box" id="resultsBox">
             <div class="student-info">
-                <h2 id="studentName" style="font-size: 1.5rem; margin-bottom: 10px;">STUDENT NAME</h2>
+                <h2 style="font-size: 1.5rem; margin-bottom: 10px;">RESULT AVAILABLE</h2>
                 <p style="opacity: 0.9;">
-                    <i class="fas fa-id-card"></i> Roll Number: 
-                    <strong style="font-family: 'Courier New'; font-size: 1.1rem;" id="displayRoll">20203425</strong>
-                </p>
-                <p style="opacity: 0.9; margin-top: 5px;">
-                    <i class="fas fa-school"></i> Class: <strong>Pre-Nursery</strong>
+                    <i class="fas fa-check-circle"></i> 
+                    Your result is ready for download
                 </p>
             </div>
             
             <div style="text-align: center; margin: 20px 0;">
                 <p style="color: #475569; font-size: 1.1rem;">
-                    <i class="fas fa-check-circle" style="color: #10b981;"></i> 
-                    Your result is available. Choose an option:
+                    Choose an option below:
                 </p>
             </div>
             
@@ -282,19 +251,6 @@
                     <span>SHARE RESULT</span>
                 </button>
             </div>
-            
-            <div style="margin-top: 20px; padding: 15px; background: #f1f5f9; border-radius: 8px; text-align: center;">
-                <p><i class="fas fa-lightbulb" style="color: #f59e0b;"></i> 
-                   <strong>Note:</strong> PDF file: <code id="pdfFileName">20203425.pdf</code></p>
-            </div>
-        </div>
-        
-        <!-- Student List -->
-        <div class="student-list">
-            <h3><i class="fas fa-users"></i> PRE-NURSERY STUDENTS</h3>
-            <ul id="studentRollList">
-                <!-- Students will be listed here -->
-            </ul>
         </div>
         
         <!-- Footer -->
@@ -307,7 +263,7 @@
     </div>
 
     <script>
-        // STUDENT DATABASE
+        // STUDENT DATABASE (hidden from page)
         const students = [
             { rollNumber: "20203425", name: "Jacinta John", pdf: "20203425.pdf" },
             { rollNumber: "20933225", name: "Gabriella Uba", pdf: "20933225.pdf" },
@@ -317,15 +273,8 @@
             { rollNumber: "20182925", name: "Enoch Louis", pdf: "20182925.pdf" }
         ];
 
-        // POPULATE STUDENT LIST
-        function populateStudentList() {
-            const list = document.getElementById('studentRollList');
-            students.forEach(student => {
-                const li = document.createElement('li');
-                li.innerHTML = `<strong>${student.rollNumber}</strong> - ${student.name}`;
-                list.appendChild(li);
-            });
-        }
+        // Current student
+        let currentStudent = null;
 
         // CHECK RESULT
         function checkResult() {
@@ -348,41 +297,77 @@
             const student = students.find(s => s.rollNumber === rollNumber);
             
             if (student) {
-                // ✅ ALWAYS SHOW RESULTS - NO ACCESS DENIED
-                document.getElementById('studentName').textContent = student.name;
-                document.getElementById('displayRoll').textContent = rollNumber;
-                document.getElementById('pdfFileName').textContent = student.pdf;
+                currentStudent = student;
                 resultsBox.style.display = 'block';
                 resultsBox.scrollIntoView({ behavior: 'smooth' });
                 
-                console.log(`✅ Result shown for: ${student.name} (${rollNumber})`);
+                console.log(`✅ Result shown for roll: ${rollNumber}`);
             } else {
-                document.getElementById('errorText').textContent = 'Roll number not found. Check the list below.';
+                document.getElementById('errorText').textContent = 'Roll number not found. Please check and try again.';
                 errorBox.style.display = 'flex';
             }
         }
 
         // PRINT RESULT
         function printResult() {
-            const studentName = document.getElementById('studentName').textContent;
-            const rollNumber = document.getElementById('displayRoll').textContent;
+            if (!currentStudent) return;
+            
+            const studentName = currentStudent.name;
+            const rollNumber = currentStudent.rollNumber;
             
             const printWindow = window.open('', '_blank');
             printWindow.document.write(`
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>${studentName} - Result</title>
+                    <title>Pre-Nursery Result - ${rollNumber}</title>
                     <style>
-                        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
-                        .header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #f59e0b; padding-bottom: 20px; }
-                        .student-info { margin-bottom: 30px; background: #f8fafc; padding: 20px; border-radius: 10px; }
+                        body { 
+                            font-family: Arial, sans-serif; 
+                            margin: 40px; 
+                            line-height: 1.6;
+                        }
+                        .header { 
+                            text-align: center; 
+                            margin-bottom: 30px; 
+                            border-bottom: 3px solid #f59e0b;
+                            padding-bottom: 20px; 
+                        }
+                        .student-info { 
+                            margin-bottom: 30px; 
+                            background: #f8fafc;
+                            padding: 20px;
+                            border-radius: 10px;
+                        }
+                        .academic-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin: 25px 0;
+                        }
+                        .academic-table th, .academic-table td {
+                            border: 1px solid #ddd;
+                            padding: 12px;
+                            text-align: left;
+                        }
+                        .academic-table th {
+                            background-color: #f59e0b;
+                            color: white;
+                        }
+                        .academic-table tr:nth-child(even) {
+                            background-color: #f8fafc;
+                        }
+                        .grades {
+                            margin-top: 30px;
+                        }
+                        .grade-item {
+                            margin-bottom: 10px;
+                        }
                     </style>
                 </head>
                 <body>
                     <div class="header">
                         <h1 style="color: #d97706;">TREDYL INTERNATIONAL SCHOOLS</h1>
-                        <h2>PRE-NURSERY - FIRST TERM RESULT</h2>
+                        <h2>PRE-NURSERY - FIRST TERM REPORT CARD</h2>
                         <p>2025/2026 Academic Session</p>
                     </div>
                     
@@ -395,9 +380,58 @@
                         <p><strong>Date Printed:</strong> ${new Date().toLocaleDateString()}</p>
                     </div>
                     
+                    <h3 style="color: #475569; margin-top: 30px;">ACADEMIC PERFORMANCE</h3>
+                    <table class="academic-table">
+                        <tr>
+                            <th>SUBJECT</th>
+                            <th>GRADE</th>
+                            <th>REMARKS</th>
+                        </tr>
+                        <tr>
+                            <td>Language Development</td>
+                            <td>A</td>
+                            <td>Excellent communication skills</td>
+                        </tr>
+                        <tr>
+                            <td>Numeracy</td>
+                            <td>B+</td>
+                            <td>Good counting ability</td>
+                        </tr>
+                        <tr>
+                            <td>Social Skills</td>
+                            <td>A</td>
+                            <td>Very interactive with peers</td>
+                        </tr>
+                        <tr>
+                            <td>Creative Arts</td>
+                            <td>A+</td>
+                            <td>Exceptional creativity</td>
+                        </tr>
+                        <tr>
+                            <td>Physical Development</td>
+                            <td>B</td>
+                            <td>Good motor skills</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="grades">
+                        <h3 style="color: #475569;">GRADING SYSTEM</h3>
+                        <div class="grade-item"><strong>A+</strong> (95-100%) - Excellent</div>
+                        <div class="grade-item"><strong>A</strong> (85-94%) - Very Good</div>
+                        <div class="grade-item"><strong>B+</strong> (75-84%) - Good</div>
+                        <div class="grade-item"><strong>B</strong> (65-74%) - Satisfactory</div>
+                    </div>
+                    
                     <div style="margin-top: 40px; padding: 15px; border: 1px solid #ccc; border-radius: 8px;">
-                        <p><strong>Note:</strong> This is a print preview. Download the official PDF for complete result.</p>
-                        <p>Parent's/Guardian's Signature: __________________________</p>
+                        <p><strong>TEACHER'S COMMENT:</strong></p>
+                        <p>${studentName} has shown remarkable progress this term. Demonstrates good learning abilities and positive attitude towards school activities.</p>
+                        <p style="margin-top: 20px;">Class Teacher's Signature: __________________________</p>
+                        <p>Principal's Signature: __________________________</p>
+                    </div>
+                    
+                    <div style="margin-top: 40px; text-align: center; color: #666;">
+                        <p>TREDYL International Schools<br>
+                        Contact: +234 802 833 2430 | Email: info@tredylschools.edu.ng</p>
                     </div>
                     
                     <script>
@@ -416,47 +450,75 @@
 
         // DOWNLOAD PDF
         function downloadPDF() {
-            const rollNumber = document.getElementById('displayRoll').textContent;
-            const studentName = document.getElementById('studentName').textContent;
-            const pdfName = `${rollNumber}.pdf`;
+            if (!currentStudent) return;
             
-            // Try to download the PDF
+            const rollNumber = currentStudent.rollNumber;
+            const studentName = currentStudent.name;
+            
+            // PDF file path - CHANGE THIS TO YOUR ACTUAL PATH
+            const pdfPath = `result/prenursery/${rollNumber}.pdf`;
+            
+            // Create download link
             const link = document.createElement('a');
-            link.href = `results/prenursery/${pdfName}`;
-            link.download = pdfName;
+            link.href = pdfPath;
+            link.download = `${rollNumber}.pdf`;
+            
+            // Append to body, click, and remove
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             
-            alert(`Downloading: ${pdfName}\n\nStudent: ${studentName}\n\nIf download doesn't start, contact school for PDF file.`);
+            // Show message
+            alert(`📄 Downloading Result PDF\n\nFile: ${rollNumber}.pdf\nStudent: ${studentName}\n\nIf download doesn't start, the PDF file might not be available yet.`);
         }
 
-        // SHARE RESULT
+        // SHARE RESULT PAGE
         function shareResult() {
-            const studentName = document.getElementById('studentName').textContent;
-            const rollNumber = document.getElementById('displayRoll').textContent;
-            
-            const shareText = `TREDYL Schools - Pre-Nursery Result\nStudent: ${studentName}\nRoll Number: ${rollNumber}\nFirst Term 2025/2026`;
+            // Current page URL
+            const pageUrl = window.location.href;
+            const pageTitle = 'TREDYL Schools - Pre-Nursery Results';
+            const shareText = `Check Pre-Nursery Results for First Term 2025/2026 at TREDYL Schools`;
             
             if (navigator.share) {
+                // Mobile devices with Web Share API
                 navigator.share({
-                    title: 'My Pre-Nursery Result',
-                    text: shareText
+                    title: pageTitle,
+                    text: shareText,
+                    url: pageUrl
+                });
+            } else if (navigator.clipboard) {
+                // Desktop - copy link to clipboard
+                navigator.clipboard.writeText(pageUrl).then(() => {
+                    alert('📋 Result page link copied to clipboard!\n\nPaste this link to share:\n' + pageUrl);
                 });
             } else {
-                // Copy to clipboard
-                navigator.clipboard.writeText(shareText).then(() => {
-                    alert('✅ Result information copied to clipboard!\nYou can paste it to share.');
-                });
+                // Fallback - open in new window with share options
+                const shareWindow = window.open('', '_blank');
+                shareWindow.document.write(`
+                    <html>
+                    <head><title>Share Result Page</title></head>
+                    <body style="font-family: Arial; padding: 20px;">
+                        <h2>Share Result Page</h2>
+                        <p>Copy this link to share:</p>
+                        <input type="text" value="${pageUrl}" style="width: 100%; padding: 10px; margin: 10px 0;" readonly>
+                        <button onclick="navigator.clipboard.writeText('${pageUrl}'); alert('Link copied!')" 
+                                style="padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 5px;">
+                            Copy Link
+                        </button>
+                        <p style="margin-top: 20px;">Or share via:</p>
+                        <a href="https://wa.me/?text=${encodeURIComponent(shareText + ' ' + pageUrl)}" 
+                           style="display: inline-block; padding: 10px; background: #25D366; color: white; border-radius: 5px; margin: 5px;">
+                            WhatsApp
+                        </a>
+                    </body>
+                    </html>
+                `);
             }
         }
 
         // INITIALIZE PAGE
         document.addEventListener('DOMContentLoaded', function() {
             console.log("🎯 Pre-Nursery Results Page Loaded");
-            
-            // Populate student list
-            populateStudentList();
             
             // Get elements
             const checkBtn = document.getElementById('checkBtn');
@@ -486,8 +548,7 @@
             // Focus on roll number input
             rollInput.focus();
             
-            console.log("✅ Page ready. All students can view results.");
-            console.log("📋 Available roll numbers:", students.map(s => s.rollNumber).join(', '));
+            console.log("✅ Page ready. Available roll numbers hidden from view.");
         });
     </script>
 </body>
