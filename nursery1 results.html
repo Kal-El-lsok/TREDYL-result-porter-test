@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nursery 1 Results - TREDYL SCHOOLS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        .logo img {
+            height: 60px;
+        }
+        
+        .header h1 {
+            color: #1d4ed8;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            color: #64748b;
+        }
+        
+        .form-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .icon {
+            font-size: 3rem;
+            color: #3b82f6;
+            margin-bottom: 15px;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            margin: 20px 0;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        
+        .check-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .check-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .error-box {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .results-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .student-info {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        .action-btn i {
+            font-size: 1.5rem;
+        }
+        
+        .print-btn { 
+            background: #f3f4f6; 
+            color: #6b7280; 
+            cursor: not-allowed;
+        }
+        
+        .download-btn { background: #d1fae5; color: #065f46; }
+        .share-btn { background: #dbeafe; color: #1e40af; }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: white;
+            padding: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .form-box,
+            .results-box {
+                padding: 20px;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <img src="logo-removebg-preview.png" alt="TREDYL Schools Logo">
+            </div>
+            <h1>TREDYL INTERNATIONAL SCHOOLS</h1>
+            <p>Nursery 1 Results - First Term 2025/2026</p>
+        </div>
+        
+        <!-- Form -->
+        <div class="form-box">
+            <div class="icon">
+                <i class="fas fa-child"></i>
+            </div>
+            <h2 style="color: #1d4ed8; margin-bottom: 10px;">CHECK NURSERY 1 RESULT</h2>
+            <p style="color: #64748b; margin-bottom: 20px;">Enter roll number to view and download result</p>
+            
+            <input type="text" id="rollNumber" class="input-field" 
+                   placeholder="Enter roll number" 
+                   maxlength="10" autofocus>
+            
+            <button class="check-btn" id="checkBtn">
+                <i class="fas fa-search"></i> CHECK RESULT
+            </button>
+            
+            <div class="error-box" id="errorBox">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">Invalid roll number</span>
+            </div>
+        </div>
+        
+        <!-- Results -->
+        <div class="results-box" id="resultsBox">
+            <div class="student-info">
+                <h2 style="font-size: 1.5rem; margin-bottom: 10px;">NURSERY 1 RESULT AVAILABLE</h2>
+                <p style="opacity: 0.9;">
+                    <i class="fas fa-check-circle"></i> 
+                    Your result is ready for download
+                </p>
+            </div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <p style="color: #475569; font-size: 1.1rem;">
+                    Choose an option below:
+                </p>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn print-btn" id="printBtn">
+                    <i class="fas fa-print"></i>
+                    <span>PRINT RESULT</span>
+                </button>
+                
+                <button class="action-btn download-btn" id="downloadBtn">
+                    <i class="fas fa-download"></i>
+                    <span>DOWNLOAD PDF</span>
+                </button>
+                
+                <button class="action-btn share-btn" id="shareBtn">
+                    <i class="fas fa-share-alt"></i>
+                    <span>SHARE RESULT</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2025 Tredyl International School. All rights reserved.</p>
+            <p style="margin-top: 10px; opacity: 0.8;">
+                <i class="fas fa-phone"></i> Contact: +234 802 833 2430
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // CHECK RESULT
+        function checkResult() {
+            const rollNumber = document.getElementById('rollNumber').value.trim();
+            const errorBox = document.getElementById('errorBox');
+            const resultsBox = document.getElementById('resultsBox');
+            
+            // Hide error and results
+            errorBox.style.display = 'none';
+            resultsBox.style.display = 'none';
+            
+            // Validate input
+            if (!rollNumber || !/^\d+$/.test(rollNumber)) {
+                document.getElementById('errorText').textContent = 'Please enter a valid roll number (numbers only)';
+                errorBox.style.display = 'flex';
+                return;
+            }
+            
+            // Always show results if roll number has numbers
+            // This directly points to the PDF in result folder
+            resultsBox.style.display = 'block';
+            resultsBox.scrollIntoView({ behavior: 'smooth' });
+            
+            console.log(`✅ Checking result for roll: ${rollNumber}`);
+            console.log(`📁 PDF path: result/nursery1/${rollNumber}.pdf`);
+        }
+
+        // PRINT BUTTON - SHOWS MESSAGE
+        function printResult() {
+            const rollNumber = document.getElementById('rollNumber').value.trim();
+            
+            alert(`⚠️ PRINT FUNCTION UNAVAILABLE\n\nPlease download the PDF result first.\n\nRoll Number: ${rollNumber}\n\nClick the 'DOWNLOAD PDF' button to get your result file.\nAfter downloading, you can print it from your device.`);
+        }
+
+        // DOWNLOAD PDF
+        function downloadPDF() {
+            const rollNumber = document.getElementById('rollNumber').value.trim();
+            
+            if (!rollNumber) {
+                alert("Please enter a roll number first");
+                return;
+            }
+            
+            // PDF file path - DIRECTLY POINTS TO RESULT FOLDER
+            const pdfPath = `result/nursery1/${rollNumber}.pdf`;
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.href = pdfPath;
+            link.download = `${rollNumber}.pdf`;
+            
+            // Append to body, click, and remove
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Show success message
+            alert(`✅ DOWNLOADING RESULT\n\nFile: ${rollNumber}.pdf\n\n📁 Location: result/nursery1/${rollNumber}.pdf\n\nIf download doesn't start, the PDF file for this roll number may not exist yet.`);
+        }
+
+        // SHARE RESULT PAGE
+        function shareResult() {
+            // Current page URL
+            const pageUrl = window.location.href;
+            const pageTitle = 'TREDYL Schools - Nursery 1 Results';
+            const shareText = `Check Nursery 1 Results for First Term 2025/2026 at TREDYL Schools`;
+            
+            if (navigator.share) {
+                // Mobile devices with Web Share API
+                navigator.share({
+                    title: pageTitle,
+                    text: shareText,
+                    url: pageUrl
+                });
+            } else if (navigator.clipboard) {
+                // Desktop - copy link to clipboard
+                navigator.clipboard.writeText(pageUrl).then(() => {
+                    alert('📋 Nursery 1 result page link copied to clipboard!\n\nPaste this link to share:\n' + pageUrl);
+                });
+            } else {
+                // Fallback - open in new window with share options
+                const shareWindow = window.open('', '_blank');
+                shareWindow.document.write(`
+                    <html>
+                    <head><title>Share Nursery 1 Results</title></head>
+                    <body style="font-family: Arial; padding: 20px;">
+                        <h2>Share Nursery 1 Results Page</h2>
+                        <p>Copy this link to share:</p>
+                        <input type="text" value="${pageUrl}" style="width: 100%; padding: 10px; margin: 10px 0;" readonly>
+                        <button onclick="navigator.clipboard.writeText('${pageUrl}'); alert('Link copied!')" 
+                                style="padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 5px;">
+                            Copy Link
+                        </button>
+                        <p style="margin-top: 20px;">Or share via:</p>
+                        <a href="https://wa.me/?text=${encodeURIComponent(shareText + ' ' + pageUrl)}" 
+                           style="display: inline-block; padding: 10px; background: #25D366; color: white; border-radius: 5px; margin: 5px;">
+                            WhatsApp
+                        </a>
+                    </body>
+                    </html>
+                `);
+            }
+        }
+
+        // INITIALIZE PAGE
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("🎯 Nursery 1 Results Page Loaded");
+            
+            // Get elements
+            const checkBtn = document.getElementById('checkBtn');
+            const rollInput = document.getElementById('rollNumber');
+            const printBtn = document.getElementById('printBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const shareBtn = document.getElementById('shareBtn');
+            
+            // Add event listeners
+            checkBtn.addEventListener('click', checkResult);
+            printBtn.addEventListener('click', printResult);
+            downloadBtn.addEventListener('click', downloadPDF);
+            shareBtn.addEventListener('click', shareResult);
+            
+            // Enter key to check result
+            rollInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkResult();
+                }
+            });
+            
+            // Format roll number input (numbers only)
+            rollInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/\D/g, '').slice(0, 10);
+            });
+            
+            // Focus on roll number input
+            rollInput.focus();
+            
+            console.log("✅ Nursery 1 page ready. Direct PDF download from result/nursery1/ folder.");
+        });
+    </script>
+</body>
+                  </html>
