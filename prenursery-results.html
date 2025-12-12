@@ -155,13 +155,14 @@
             font-size: 1.5rem;
         }
         
-        .print-btn { background: #fef3c7; color: #92400e; }
+        .print-btn { 
+            background: #f3f4f6; 
+            color: #6b7280; 
+            cursor: not-allowed;
+        }
+        
         .download-btn { background: #d1fae5; color: #065f46; }
         .share-btn { background: #dbeafe; color: #1e40af; }
-        
-        .student-list {
-            display: none; /* Hidden as requested */
-        }
         
         .footer {
             text-align: center;
@@ -308,144 +309,15 @@
             }
         }
 
-        // PRINT RESULT
+        // PRINT BUTTON - SHOWS MESSAGE
         function printResult() {
-            if (!currentStudent) return;
+            alert("⚠️ PRINT FUNCTION UNAVAILABLE\n\nPlease download the PDF result first.\nAfter downloading, you can print it from your device.\n\nClick the 'DOWNLOAD PDF' button to get your result.");
             
-            const studentName = currentStudent.name;
-            const rollNumber = currentStudent.rollNumber;
-            
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Pre-Nursery Result - ${rollNumber}</title>
-                    <style>
-                        body { 
-                            font-family: Arial, sans-serif; 
-                            margin: 40px; 
-                            line-height: 1.6;
-                        }
-                        .header { 
-                            text-align: center; 
-                            margin-bottom: 30px; 
-                            border-bottom: 3px solid #f59e0b;
-                            padding-bottom: 20px; 
-                        }
-                        .student-info { 
-                            margin-bottom: 30px; 
-                            background: #f8fafc;
-                            padding: 20px;
-                            border-radius: 10px;
-                        }
-                        .academic-table {
-                            width: 100%;
-                            border-collapse: collapse;
-                            margin: 25px 0;
-                        }
-                        .academic-table th, .academic-table td {
-                            border: 1px solid #ddd;
-                            padding: 12px;
-                            text-align: left;
-                        }
-                        .academic-table th {
-                            background-color: #f59e0b;
-                            color: white;
-                        }
-                        .academic-table tr:nth-child(even) {
-                            background-color: #f8fafc;
-                        }
-                        .grades {
-                            margin-top: 30px;
-                        }
-                        .grade-item {
-                            margin-bottom: 10px;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1 style="color: #d97706;">TREDYL INTERNATIONAL SCHOOLS</h1>
-                        <h2>PRE-NURSERY - FIRST TERM REPORT CARD</h2>
-                        <p>2025/2026 Academic Session</p>
-                    </div>
-                    
-                    <div class="student-info">
-                        <h3 style="color: #475569;">STUDENT INFORMATION</h3>
-                        <p><strong>Name:</strong> ${studentName}</p>
-                        <p><strong>Roll Number:</strong> ${rollNumber}</p>
-                        <p><strong>Class:</strong> Pre-Nursery</p>
-                        <p><strong>Term:</strong> First Term 2025/2026</p>
-                        <p><strong>Date Printed:</strong> ${new Date().toLocaleDateString()}</p>
-                    </div>
-                    
-                    <h3 style="color: #475569; margin-top: 30px;">ACADEMIC PERFORMANCE</h3>
-                    <table class="academic-table">
-                        <tr>
-                            <th>SUBJECT</th>
-                            <th>GRADE</th>
-                            <th>REMARKS</th>
-                        </tr>
-                        <tr>
-                            <td>Language Development</td>
-                            <td>A</td>
-                            <td>Excellent communication skills</td>
-                        </tr>
-                        <tr>
-                            <td>Numeracy</td>
-                            <td>B+</td>
-                            <td>Good counting ability</td>
-                        </tr>
-                        <tr>
-                            <td>Social Skills</td>
-                            <td>A</td>
-                            <td>Very interactive with peers</td>
-                        </tr>
-                        <tr>
-                            <td>Creative Arts</td>
-                            <td>A+</td>
-                            <td>Exceptional creativity</td>
-                        </tr>
-                        <tr>
-                            <td>Physical Development</td>
-                            <td>B</td>
-                            <td>Good motor skills</td>
-                        </tr>
-                    </table>
-                    
-                    <div class="grades">
-                        <h3 style="color: #475569;">GRADING SYSTEM</h3>
-                        <div class="grade-item"><strong>A+</strong> (95-100%) - Excellent</div>
-                        <div class="grade-item"><strong>A</strong> (85-94%) - Very Good</div>
-                        <div class="grade-item"><strong>B+</strong> (75-84%) - Good</div>
-                        <div class="grade-item"><strong>B</strong> (65-74%) - Satisfactory</div>
-                    </div>
-                    
-                    <div style="margin-top: 40px; padding: 15px; border: 1px solid #ccc; border-radius: 8px;">
-                        <p><strong>TEACHER'S COMMENT:</strong></p>
-                        <p>${studentName} has shown remarkable progress this term. Demonstrates good learning abilities and positive attitude towards school activities.</p>
-                        <p style="margin-top: 20px;">Class Teacher's Signature: __________________________</p>
-                        <p>Principal's Signature: __________________________</p>
-                    </div>
-                    
-                    <div style="margin-top: 40px; text-align: center; color: #666;">
-                        <p>TREDYL International Schools<br>
-                        Contact: +234 802 833 2430 | Email: info@tredylschools.edu.ng</p>
-                    </div>
-                    
-                    <script>
-                        window.onload = function() {
-                            window.print();
-                            setTimeout(function() {
-                                window.close();
-                            }, 1000);
-                        }
-                    <\/script>
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
+            // Optional: Change button style to show it's disabled
+            const printBtn = document.getElementById('printBtn');
+            printBtn.style.background = "#f3f4f6";
+            printBtn.style.color = "#6b7280";
+            printBtn.style.cursor = "not-allowed";
         }
 
         // DOWNLOAD PDF
@@ -468,8 +340,8 @@
             link.click();
             document.body.removeChild(link);
             
-            // Show message
-            alert(`📄 Downloading Result PDF\n\nFile: ${rollNumber}.pdf\nStudent: ${studentName}\n\nIf download doesn't start, the PDF file might not be available yet.`);
+            // Show success message
+            alert(`✅ RESULT DOWNLOADED\n\nFile: ${rollNumber}.pdf\nStudent: ${studentName}\n\n📝 Now you can:\n1. Open the downloaded PDF\n2. Click "Print" in your PDF viewer\n3. Select your printer\n4. Print the result`);
         }
 
         // SHARE RESULT PAGE
