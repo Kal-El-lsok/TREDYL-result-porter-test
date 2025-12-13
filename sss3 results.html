@@ -1,1 +1,957 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSS3 Results - TREDYL SCHOOLS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #b91c1c;
+            --secondary: #991b1b;
+            --accent: #f59e0b;
+            --light: #fef2f2;
+            --dark: #1a202c;
+            --gradient: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
+            --shadow: 0 20px 40px rgba(185, 28, 28, 0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            z-index: -2;
+            animation: gradientShift 15s ease infinite;
+            background-size: 400% 400%;
+        }
+        
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+        
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            left: 80%;
+            animation-delay: -5s;
+        }
+        
+        .shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 80%;
+            left: 20%;
+            animation-delay: -10s;
+        }
+        
+        .shape:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            top: 10%;
+            left: 70%;
+            animation-delay: -15s;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header with Animation */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideDown 1s ease-out;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            animation: pulseLogo 2s infinite;
+        }
+        
+        .logo {
+            height: 80px;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+        }
+        
+        .school-name {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .class-title {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px 30px;
+            display: inline-block;
+            margin: 10px auto;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .class-title h2 {
+            color: white;
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        
+        .graduation-badge {
+            background: linear-gradient(135deg, var(--accent), #d97706);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: 600;
+            margin: 15px 0;
+            animation: badgeGlow 2s infinite;
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
+        }
+        
+        /* Main Card */
+        .main-card {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            animation: cardAppear 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient);
+        }
+        
+        .icon-container {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+        
+        .main-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 5px 10px rgba(185, 28, 28, 0.2));
+        }
+        
+        .card-title {
+            text-align: center;
+            color: var(--dark);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .card-subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        /* Input Field */
+        .input-group {
+            position: relative;
+            margin: 30px 0;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 20px 20px 20px 50px;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            font-size: 18px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 5px 20px rgba(185, 28, 28, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        /* Button */
+        .action-button {
+            width: 100%;
+            padding: 20px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: 0 10px 20px rgba(185, 28, 28, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(185, 28, 28, 0.4);
+        }
+        
+        .action-button:active {
+            transform: translateY(-2px);
+        }
+        
+        .action-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255,255,255,0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .action-button:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        /* Results Box */
+        .results-container {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            margin-top: 30px;
+            box-shadow: var(--shadow);
+            animation: slideUp 0.8s ease-out;
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .results-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient);
+        }
+        
+        .success-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            animation: successPulse 2s infinite;
+        }
+        
+        .success-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            animation: successSpin 1s ease-out;
+        }
+        
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .action-card {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px rgba(185, 28, 28, 0.15);
+        }
+        
+        .action-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .action-card h4 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .action-card p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        /* Alert Box */
+        .alert-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            animation: fadeIn 0.5s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .alert-box i {
+            color: #f59e0b;
+            font-size: 1.5rem;
+        }
+        
+        /* Error Box */
+        .error-box {
+            background: #fee2e2;
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            animation: shake 0.5s ease-out;
+            display: none;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            color: white;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-1000px) rotate(720deg); }
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulseLogo {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes badgeGlow {
+            0%, 100% { box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 5px 25px rgba(245, 158, 11, 0.7); }
+        }
+        
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 1;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+        
+        @keyframes successPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        @keyframes successSpin {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        /* Confetti Animation */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent);
+            top: -10px;
+            z-index: 9999;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .main-card, .results-container {
+                padding: 25px;
+            }
+            
+            .school-name {
+                font-size: 2rem;
+            }
+            
+            .class-title h2 {
+                font-size: 1.5rem;
+            }
+            
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="gradient-bg"></div>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-container">
+                <img src="logo-removebg-preview.png" alt="TREDYL Schools Logo" class="logo">
+            </div>
+            <h1 class="school-name">TREDYL INTERNATIONAL SCHOOLS</h1>
+            
+            <div class="class-title">
+                <h2>Senior Secondary School 3 (SSS3)</h2>
+            </div>
+            
+            <div class="graduation-badge">
+                <i class="fas fa-graduation-cap"></i> FINAL YEAR - GRADUATING CLASS OF 2027
+            </div>
+        </div>
+        
+        <!-- Main Form Card -->
+        <div class="main-card">
+            <div class="icon-container">
+                <i class="fas fa-university main-icon"></i>
+            </div>
+            
+            <h2 class="card-title">Check Your Final School Result</h2>
+            <p class="card-subtitle">Enter your SSS3 roll number to download your final academic result</p>
+            
+            <div class="alert-box">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>Important Notice:</strong> This is your final school result. Keep it safe for university admission and future reference.
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-user-graduate input-icon"></i>
+                <input type="text" id="rollNumber" class="input-field" 
+                       placeholder="Enter your SSS3 roll number (e.g., SSS3001)" 
+                       maxlength="10" autofocus>
+            </div>
+            
+            <button class="action-button" id="checkBtn">
+                <i class="fas fa-search"></i>
+                CHECK FINAL RESULT
+            </button>
+            
+            <div class="error-box" id="errorBox">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">Please enter a valid roll number</span>
+            </div>
+        </div>
+        
+        <!-- Results Container -->
+        <div class="results-container" id="resultsBox">
+            <div class="success-header">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 style="font-size: 1.8rem; margin-bottom: 10px;">RESULT AVAILABLE!</h3>
+                <p>Your final school result is ready for download</p>
+            </div>
+            
+            <div class="alert-box">
+                <i class="fas fa-graduation-cap"></i>
+                <div>
+                    <strong>Congratulations Graduating Student!</strong> This result marks the completion of your secondary education journey at TREDYL Schools.
+                </div>
+            </div>
+            
+            <div class="actions-grid">
+                <div class="action-card" id="printCard">
+                    <i class="fas fa-print" style="color: #6b7280;"></i>
+                    <h4>Print Result</h4>
+                    <p>Get a physical copy of your result</p>
+                </div>
+                
+                <div class="action-card" id="downloadCard">
+                    <i class="fas fa-download" style="color: #065f46;"></i>
+                    <h4>Download PDF</h4>
+                    <p>Save digital copy to your device</p>
+                </div>
+                
+                <div class="action-card" id="shareCard">
+                    <i class="fas fa-share-alt" style="color: #1e40af;"></i>
+                    <h4>Share Result</h4>
+                    <p>Share with family and friends</p>
+                </div>
+            </div>
+            
+            <div class="alert-box">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong>Next Steps:</strong> WAEC/SSCE registration begins October 2026. Visit the school office for university admission guidance.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p style="font-size: 1.1rem; margin-bottom: 20px; font-weight: 500;">
+                "The beautiful thing about learning is that no one can take it away from you."
+            </p>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>+234 802 833 2430</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>info@tredylschools.com</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Abuja, Nigeria</span>
+                </div>
+            </div>
+            
+            <p style="margin-top: 20px; color: rgba(255,255,255,0.8); font-size: 0.9rem;">
+                &copy; 2025 Tredyl International Schools. All Rights Reserved.<br>
+                First Term Results - 2025/2026 Academic Session
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("🎓 Premium SSS3 Results Portal Loaded");
+            
+            // Elements
+            const checkBtn = document.getElementById('checkBtn');
+            const rollInput = document.getElementById('rollNumber');
+            const errorBox = document.getElementById('errorBox');
+            const resultsBox = document.getElementById('resultsBox');
+            const printCard = document.getElementById('printCard');
+            const downloadCard = document.getElementById('downloadCard');
+            const shareCard = document.getElementById('shareCard');
+            
+            // Focus on input with animation
+            setTimeout(() => {
+                rollInput.focus();
+                rollInput.style.transform = 'translateY(-2px)';
+                rollInput.style.boxShadow = '0 5px 20px rgba(185, 28, 28, 0.15)';
+                
+                setTimeout(() => {
+                    rollInput.style.transform = 'translateY(0)';
+                    rollInput.style.boxShadow = '0 5px 15px rgba(0,0,0,0.05)';
+                }, 300);
+            }, 500);
+            
+            // Check Result Function
+            checkBtn.addEventListener('click', checkResult);
+            
+            // Enter key support
+            rollInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkResult();
+                }
+            });
+            
+            // Format input
+            rollInput.addEventListener('input', function() {
+                this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            });
+            
+            // Action Cards
+            printCard.addEventListener('click', printResult);
+            downloadCard.addEventListener('click', downloadPDF);
+            shareCard.addEventListener('click', shareResult);
+            
+            // Add hover effects to action cards
+            [printCard, downloadCard, shareCard].forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+            
+            // Create confetti on success
+            function createConfetti() {
+                const colors = ['#b91c1c', '#991b1b', '#f59e0b', '#ffffff'];
+                for (let i = 0; i < 100; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = Math.random() * 10 + 5 + 'px';
+                    confetti.style.height = Math.random() * 10 + 5 + 'px';
+                    document.body.appendChild(confetti);
+                    
+                    // Animation
+                    const animation = confetti.animate([
+                        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                        { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                    ], {
+                        duration: Math.random() * 3000 + 2000,
+                        easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
+                    });
+                    
+                    // Remove after animation
+                    animation.onfinish = () => confetti.remove();
+                }
+            }
+            
+            // Check Result Function
+            function checkResult() {
+                const rollNumber = rollInput.value.trim();
+                
+                // Hide error and results
+                errorBox.style.display = 'none';
+                
+                // Validate input
+                if (!rollNumber || rollNumber.length < 3) {
+                    document.getElementById('errorText').textContent = 'Please enter a valid SSS3 roll number';
+                    errorBox.style.display = 'flex';
+                    errorBox.style.animation = 'shake 0.5s ease-out';
+                    return;
+                }
+                
+                // Show loading animation on button
+                checkBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CHECKING...';
+                checkBtn.disabled = true;
+                
+                // Simulate API call
+                setTimeout(() => {
+                    // Show results with animation
+                    resultsBox.style.display = 'block';
+                    
+                    // Create confetti effect
+                    createConfetti();
+                    
+                    // Scroll to results
+                    resultsBox.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Reset button
+                    checkBtn.innerHTML = '<i class="fas fa-search"></i> CHECK FINAL RESULT';
+                    checkBtn.disabled = false;
+                    
+                    console.log(`✅ SSS3 Result checked for: ${rollNumber}`);
+                }, 1500);
+            }
+            
+            // Print Result Function
+            function printResult() {
+                const rollNumber = rollInput.value.trim();
+                
+                if (!rollNumber) {
+                    showError('Please check your result first');
+                    return;
+                }
+                
+                // Animate the card
+                printCard.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    printCard.style.transform = 'scale(1)';
+                }, 200);
+                
+                alert(`🖨️ PRINT INSTRUCTIONS\n\n1. First download your result PDF\n2. Open the downloaded file\n3. Use Ctrl+P (Windows) or Cmd+P (Mac) to print\n\nRoll Number: ${rollNumber}`);
+            }
+            
+            // Download PDF Function
+            function downloadPDF() {
+                const rollNumber = rollInput.value.trim();
+                
+                if (!rollNumber) {
+                    showError('Please enter a roll number first');
+                    return;
+                }
+                
+                // Animate the card
+                downloadCard.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    downloadCard.style.transform = 'scale(1)';
+                }, 200);
+                
+                // PDF file path
+                const pdfPath = `result/sss3/${rollNumber}.pdf`;
+                
+                // Create download link
+                const link = document.createElement('a');
+                link.href = pdfPath;
+                link.download = `SSS3_${rollNumber}_Final_Result.pdf`;
+                
+                // Append to body, click, and remove
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Success animation
+                const successMsg = document.createElement('div');
+                successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Download Started!';
+                successMsg.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #10b981;
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 10px;
+                    z-index: 10000;
+                    animation: slideDown 0.5s ease-out;
+                    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+                `;
+                document.body.appendChild(successMsg);
+                
+                setTimeout(() => {
+                    successMsg.style.animation = 'slideDown 0.5s ease-out reverse';
+                    setTimeout(() => successMsg.remove(), 500);
+                }, 3000);
+            }
+            
+            // Share Result Function
+            function shareResult() {
+                // Animate the card
+                shareCard.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    shareCard.style.transform = 'scale(1)';
+                }, 200);
+                
+                const pageUrl = window.location.href;
+                const shareText = `Check my SSS3 final results at TREDYL Schools!`;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'TREDYL Schools - SSS3 Results',
+                        text: shareText,
+                        url: pageUrl
+                    });
+                } else {
+                    navigator.clipboard.writeText(pageUrl).then(() => {
+                        alert('🔗 Link copied to clipboard!\n\nShare this link with family and friends:\n' + pageUrl);
+                    });
+                }
+            }
+            
+            // Error display function
+            function showError(message) {
+                document.getElementById('errorText').textContent = message;
+                errorBox.style.display = 'flex';
+                errorBox.style.animation = 'shake 0.5s ease-out';
+                
+                // Scroll to error
+                errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl/Cmd + F to focus on search
+                if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                    e.preventDefault();
+                    rollInput.focus();
+                    rollInput.select();
+                }
+                
+                // Escape to clear
+                if (e.key === 'Escape') {
+                    rollInput.value = '';
+                    rollInput.focus();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
