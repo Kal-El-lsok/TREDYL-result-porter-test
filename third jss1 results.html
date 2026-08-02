@@ -331,7 +331,7 @@
             }
 
             // PDF file path - DIRECTLY POINTS TO JSS1 RESULT FOLDER
-            const pdfPath = `results/jss1/${rollNumber}.pdf`;
+            const pdfPath = `third term results/jss1/${rollNumber}.pdf`;
 
             // Create download link
             const link = document.createElement('a');
@@ -352,7 +352,7 @@
             // Current page URL
             const pageUrl = window.location.href;
             const pageTitle = 'TREDYL Schools - JSS1 Results';
-            const shareText = `Check JSS1 Results for First Term 2025/2026 at TREDYL Schools`;
+            const shareText = `Check JSS1 Results for Third Term 2025/2026 at TREDYL Schools`;
 
             if (navigator.share) {
                 // Mobile devices with Web Share API
@@ -423,7 +423,7 @@
             // Focus on roll number input
             rollInput.focus();
 
-            console.log("✅ JSS1 page ready. Direct PDF download from results/jss1/ folder.");
+            console.log("✅ JSS1 page ready. Direct PDF download from third term results/jss1/ folder.");
         });
     </script>
 </body>
