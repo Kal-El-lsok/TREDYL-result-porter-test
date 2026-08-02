@@ -359,7 +359,7 @@
             }
 
             // PDF file path - DIRECTLY POINTS TO SSS2 RESULT FOLDER
-            const pdfPath = `results/sss2/${rollNumber}.pdf`;
+            const pdfPath = `third term results/sss2/${rollNumber}.pdf`;
 
             // Create download link
             const link = document.createElement('a');
@@ -380,7 +380,7 @@
             // Current page URL
             const pageUrl = window.location.href;
             const pageTitle = 'TREDYL Schools - SSS2 Results';
-            const shareText = `Check SSS2 Results (WAEC Preparation Year) for First Term 2025/2026 at TREDYL Schools`;
+            const shareText = `Check SSS2 Results (WAEC Preparation Year) for third Term 2025/2026 at TREDYL Schools`;
 
             if (navigator.share) {
                 // Mobile devices with Web Share API
@@ -451,7 +451,7 @@
             // Focus on roll number input
             rollInput.focus();
 
-            console.log("✅ SSS2 page ready. Direct PDF download from results/sss2/ folder.");
+            console.log("✅ SSS2 page ready. Direct PDF download from third term results/sss2/ folder.");
         });
     </script>
 </body>
