@@ -306,7 +306,7 @@
             }
 
             // PDF file path - DIRECTLY POINTS TO PRIMARY 4 RESULT FOLDER
-            const pdfPath = `results/primary4/${rollNumber}.pdf`;
+            const pdfPath = `third term results/primary4/${rollNumber}.pdf`;
 
             // Create download link
             const link = document.createElement('a');
@@ -327,7 +327,7 @@
             // Current page URL
             const pageUrl = window.location.href;
             const pageTitle = 'TREDYL Schools - Primary 4 Results';
-            const shareText = `Check Primary 4 Results for First Term 2025/2026 at TREDYL Schools`;
+            const shareText = `Check Primary 4 Results for Third Term 2025/2026 at TREDYL Schools`;
 
             if (navigator.share) {
                 // Mobile devices with Web Share API
@@ -398,7 +398,7 @@
             // Focus on roll number input
             rollInput.focus();
 
-            console.log("✅ Primary 4 page ready. Direct PDF download from results/primary4/ folder.");
+            console.log("✅ Primary 4 page ready. Direct PDF download from third term results/primary4/ folder.");
         });
     </script>
 </body>
